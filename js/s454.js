@@ -25,7 +25,7 @@ Date.prototype.s454 = function() {
             loop = false;
     }
 
-    var month = 1;
+    var month = 0;
     loop = true;
     while (loop && month != 12) {
         var daysInMonth = ((month % 3) - 2 == 0) ? 35 : 28;
