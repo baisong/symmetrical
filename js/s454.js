@@ -13,7 +13,7 @@ Date.prototype.s454 = function() {
 
     var refDay = parseInt((this.getTime() / day_in_ms) + days_since_epoch);
     console.log('[1] refDay: ' + refDay);
-    var cycle = refDay / (full_cycle);
+    var cycle = parseInt(refDay / (full_cycle));
     console.log('[2] cycle: ' + cycle);
     var day = refDay % (full_cycle);
     console.log('[3] day #: ' + day);
