@@ -39,7 +39,11 @@ Date.prototype.s454 = function() {
     var weekday = parseInt(day) % 7;
     var weekdays = ["Mon", "Tues", "Wednes", "Thurs", "Fri", "Satur", "Sun"];
     var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    var date = weekdays[weekday] + 'day, ' + months[month] + ', '  + day + ' ' + year;
+    var date = weekdays[weekday] + 'day, ' + months[month] + ' '  + day + ' ' + parseInt(year);
 
     return date;
 };
+
+function s454_test(timestamp) {
+  return (new Date(timestamp)).s454();
+}
