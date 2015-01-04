@@ -1,9 +1,13 @@
 body {
   background: #f0f0f0;
+  font-family: Arial, helvetica, sans-serif;
 }
 
 .s454-page {
   margin: 20px auto;
+  padding: 10px;
+  text-align: center;
+  border-radius: 10px;
   background: white;
   border: 1px solid #ddd;
 }
