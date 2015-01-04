@@ -8,16 +8,17 @@
 Date.prototype.s454 = function() {
     // constants
     var day_in_ms = 86400000;
+    // # of days since Jan 1, 0 CE and UNIX epoch of Jan 1 1970.
     var days_since_epoch = 719528;//719163;
     var full_cycle = 293 * 365 + 71;
 
     var refDay = parseInt((this.getTime() / day_in_ms) + days_since_epoch);
     console.log('[1] refDay: ' + refDay);
-    var cycle = parseInt(refDay / (full_cycle));
-    console.log('[2] cycle: ' + cycle);
+    var cycles_since_epoch = parseInt(refDay / (full_cycle));
+    console.log('[2] # full cycles since 0AD: ' + cycles_since_epoch);
     var day = refDay % (full_cycle);
-    console.log('[3] day #: ' + day);
-    var year = 293 * cycle;
+    console.log('[3] days since last full cycle end: ' + day);
+    var year = 293 * cycles_since_epoch;
     console.log('[4] year init: ' + year);
     var loop = true;
     while (loop) {
