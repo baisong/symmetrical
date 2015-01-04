@@ -8,7 +8,7 @@
 Date.prototype.s454 = function() {
     // constants
     var day_in_ms = 86400000;
-    var days_since_epoch = 719163;
+    var days_since_epoch = 719528;//719163;
     var full_cycle = 293 * 365 + 71;
 
     var refDay = parseInt((this.getTime() / day_in_ms) + days_since_epoch);
