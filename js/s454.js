@@ -13,9 +13,9 @@ Date.prototype.s454 = function(days_up_to_unix_epoch, debug) {
     // How many days passed between Jan 1, 1 AD and Jan 1, 1970.
     // 719170;//719163;//719162
     debug = !(typeof debug === "undefined");
-    days_up_to_unix_epoch = (typeof days_up_to_unix_epoch === "undefined") ? 719170 : days_up_to_unix_epoch;
+    days_up_to_unix_epoch = (typeof days_up_to_unix_epoch === "undefined") ? 719163 : days_up_to_unix_epoch;
     var full_cycle = 293 * 365 + 71;
-    console.log('[0] the date:' + this.toISOString());
+    if (debug) console.log('[0] the date:' + this.toISOString());
     var days_up_to_today = parseInt(days_up_to_unix_epoch + days_since_unix_epoch);
     if (debug) console.log('[1] Days up to today: ' + days_up_to_today);
     var cycles_since_epoch = parseInt(days_up_to_today / (full_cycle));
