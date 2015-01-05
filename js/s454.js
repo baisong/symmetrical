@@ -29,10 +29,12 @@ Date.prototype.s454 = function() {
         else
             loop = false;
     }
-    console.log('[5] year done: ' + year);
+    var isLeap = ((52 * year + 166) % 293 < 52);
+    console.log('[5] year done: ' + year + ((isLeap) ? ' (leap)' : ' (not leap)'));
     var month = 0;
     loop = true;
-    while (loop && month != 12) {
+    console.log('[6] day  init:')
+    while (loop && month < 12) {
         var daysInMonth = ((month % 3) - 2 == 0) ? 35 : 28;
         if (day > daysInMonth) {
             month++;
@@ -40,8 +42,8 @@ Date.prototype.s454 = function() {
         } else
             loop = false;
     }
-    console.log('[6] mnth done: ' + month);
     console.log('[7] day  done: ' + day);
+    console.log('[8] mnth done: ' + month);
 
     var weekday = parseInt(day + 6) % 7;
     var weekdays = ["Mon", "Tues", "Wednes", "Thurs", "Fri", "Satur", "Sun"];
