@@ -26,12 +26,15 @@ Date.prototype.s454 = function(days_up_to_unix_epoch, debug) {
     if (debug) console.log('[4] year init: ' + year);
     var loop = true;
     while (loop) {
-        year++;
+        //year++;
         var nbDaysInCurrentYear = (s454_isLeap(year)) ? 371 : 364;
-        if (day > nbDaysInCurrentYear)
+        if (day > nbDaysInCurrentYear) {
+            year++;
             day -= nbDaysInCurrentYear;
-        else
+        }
+        else {
             loop = false;
+        }
     }
     var isLeap = ((52 * year + 166) % 293 < 52);
     if (debug) console.log('[5] year done: ' + year + ((isLeap) ? ' (leap)' : ''));
@@ -40,11 +43,15 @@ Date.prototype.s454 = function(days_up_to_unix_epoch, debug) {
     if (debug) console.log('[6] day  init:')
     while (loop && month < 12) {
         var daysInMonth = ((month % 3) - 2 == 0) ? 35 : 28;
+        if ((month == 11) && isLeap) {
+            daysInMonth = 35;
+        }
         if (day > daysInMonth) {
             month++;
             day -= daysInMonth;
-        } else
+        } else {
             loop = false;
+        }
     }
     if (debug) console.log('[7] day  done: ' + day);
     if (debug) console.log('[8] mnth done: ' + month);
