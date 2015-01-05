@@ -16,7 +16,7 @@ Date.prototype.s454 = function(days_up_to_unix_epoch, debug) {
     days_up_to_unix_epoch = (typeof days_up_to_unix_epoch === "undefined") ? 719170 : days_up_to_unix_epoch;
     var full_cycle = 293 * 365 + 71;
     console.log('[0] the date:' + this.toISOString());
-    var days_up_to_today = parseInt(days_up_to_unix_epoch + days_since_epoch);
+    var days_up_to_today = parseInt(days_up_to_unix_epoch + days_since_unix_epoch);
     if (debug) console.log('[1] Days up to today: ' + days_up_to_today);
     var cycles_since_epoch = parseInt(days_up_to_today / (full_cycle));
     if (debug) console.log('[2] # full cycles since 1AD: ' + cycles_since_epoch);
