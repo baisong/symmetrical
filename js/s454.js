@@ -58,13 +58,13 @@ function s454_isLeap(year) {
     return ((52 * year + 146) % 293) < 52;
 }
 
-function s454_assert(in, out) {
-    var actual = (new Date(in)).s454();
+function s454_assert(input, out) {
+    var actual = (new Date(input)).s454();
     if (actual.indexOf(out)) {
-        console.log('PASSED: "' + in + '" => "' + out + '"');
+        console.log('PASSED: "' + input + '" => "' + out + '"');
     }
     else {
-        console.log('FAILED: "' + in + '" => "' + out + '" ACTUAL: "' + actual + '"');
+        console.log('FAILED: "' + input + '" => "' + out + '" ACTUAL: "' + actual + '"');
     }
 }
 
