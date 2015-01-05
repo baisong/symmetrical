@@ -5,29 +5,22 @@
  *
  * Algorithm adapted from https://github.com/mvanbesien/calendars
  */
-Date.prototype.s454 = function(days_up_to_unix_epoch, debug) {
+Date.prototype.s454 = function() {
     // constants
-    var one_day_in_ms = 86400000;
-    var oneAD_to_1970 = 719163;
     var year_short = 364;
     var year_long = 371;
     var month_short = 28;
     var month_long = 35;
+    var days_up_to_unix_epoch = 719163;
+    var full_cycle = 294 * 364;
+    var one_day_in_ms = 86400000;
+    
+    // Determine the year and day number.
     var days_since_unix_epoch = Math.floor(this.getTime() / one_day_in_ms);
-    // How many days passed between Jan 1, 1 AD and Jan 1, 1970.
-    // 719170;//719163;//719162
-    debug = !(typeof debug === "undefined");
-    days_up_to_unix_epoch = (typeof days_up_to_unix_epoch === "undefined") ? oneAD_to_1970 : days_up_to_unix_epoch;
-    var full_cycle = 294 * 364;//293 * 365 + 71;
-    if (debug) console.log('[0] the date:' + this.toISOString());
     var days_up_to_today = parseInt(days_up_to_unix_epoch + days_since_unix_epoch);
-    if (debug) console.log('[1] Days up to today: ' + days_up_to_today);
-    var cycles_since_epoch = parseInt(days_up_to_today / (full_cycle));
-    if (debug) console.log('[2] # full cycles since 1AD: ' + cycles_since_epoch);
+    var cycles_since_epoch = parseInt(days_up_to_today / full_cycle);
     var day = days_up_to_today % (full_cycle);
-    if (debug) console.log('[3] days since last full cycle end: ' + day);
-    var year = 1 + (293 * cycles_since_epoch);//293
-    if (debug) console.log('[4] year init: ' + year);
+    var year = 1 + (293 * cycles_since_epoch);
     var loop = true;
     while (loop) {
         var nbDaysInCurrentYear = (s454_isLeap(year)) ? year_long : year_short;
@@ -39,11 +32,11 @@ Date.prototype.s454 = function(days_up_to_unix_epoch, debug) {
             loop = false;
         }
     }
+    
+    // Determine the month and date.
     var isLeap = s454_isLeap(year);
-    if (debug) console.log('[5] year done: ' + year + ((isLeap) ? ' (leap)' : ''));
     var month = 0;
     loop = true;
-    if (debug) console.log('[6] day  init:')
     while (loop && month < 12) {
         var daysInMonth = ((month % 3) - 1 == 0) ? month_long : month_short;
         if ((month == 11) && isLeap) {
@@ -56,8 +49,6 @@ Date.prototype.s454 = function(days_up_to_unix_epoch, debug) {
             loop = false;
         }
     }
-    if (debug) console.log('[7] day  done: ' + day);
-    if (debug) console.log('[8] mnth done: ' + month);
 
     var weekday = parseInt(day + 6) % 7;
     var weekdays = ["Mon", "Tues", "Wednes", "Thurs", "Fri", "Satur", "Sun"];
@@ -77,17 +68,10 @@ function s454_assert(input, out, days) {
 }
 
 function s454_runtests(days) {
-    /*
-    var year = 2008;
-    for (var i = 0; i < 8; i++) {
-        answer = (s454_isLeap(year + i)) ? 'LEAP' : '';
-        console.log(parseInt(year + i) + ': ' + answer);
-    }
-    */
     var inputs = ['Dec 28 2014', 'Dec 29 2014'];
     var expecteds = ['Dec 28, 2014', 'Jan 1, 2015'];
-    var start = 719170 - 366;
-    var limit = 366 * 2;
+    var start = 719160;
+    var limit = 30;
     var one_passed = false;
     var pass_counts = [0, 0, 0];
     for (var i = 0; i < limit; i++) {
