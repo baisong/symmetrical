@@ -76,6 +76,7 @@ function s454_runtests(days) {
     var expecteds = ['Dec 28, 2014', 'Jan 1, 2015'];
     var start = 719170 - 366;
     var limit = 366 * 2;
+    var one_passed = false;
     for (var i = 0; i < limit; i++) {
         var passed = true;
         for (var j = 0; j < 2; j++) {
@@ -84,7 +85,13 @@ function s454_runtests(days) {
                 passed = false;
             }
         }
-        console.log((passed) ? 'PASSED: ' + (start + i) : 'failed');
+        if (passed) {
+            one_passed = true;
+            console.log('PASSED: ' + (start + i));
+        }
+    }
+    if (!one_passed) {
+        console.log('All failed.');
     }
 }
 
