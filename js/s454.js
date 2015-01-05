@@ -43,7 +43,7 @@ Date.prototype.s454 = function() {
     console.log('[6] mnth done: ' + month);
     console.log('[7] day  done: ' + day);
 
-    var weekday = parseInt(day) % 7;
+    var weekday = parseInt(day + 6) % 7;
     var weekdays = ["Mon", "Tues", "Wednes", "Thurs", "Fri", "Satur", "Sun"];
     var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     var date = weekdays[weekday] + 'day, ' + months[month] + ' '  + day + ' ' + parseInt(year);
