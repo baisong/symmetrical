@@ -77,22 +77,23 @@ function s454_runtests(days) {
     var start = 719170 - 366;
     var limit = 366 * 2;
     var one_passed = false;
+    var passed_counts = [0, 0, 0];
     for (var i = 0; i < limit; i++) {
-        var passed = true;
+        var passed = 0;
         for (var j = 0; j < 2; j++) {
-            console.log(inputs[j] + ' ?= ' + expecteds[j]);
-            if (!s454_assert(inputs[j], expecteds[j], start + i)) {
-                passed = false;
+            //console.log(inputs[j] + ' ?= ' + expecteds[j]);
+            if (s454_assert(inputs[j], expecteds[j], start + i)) {
+                passed += 1;
             }
         }
-        if (passed) {
+        pass_counts[passed]++;
+        if (passed == 2) {
             one_passed = true;
             console.log('PASSED: ' + (start + i));
         }
     }
-    if (!one_passed) {
-        console.log('All failed.');
-    }
+    console.log('Pass counts:');
+    console.log(passed_counts);
 }
 
 function s454_test(timestamp, days) {
