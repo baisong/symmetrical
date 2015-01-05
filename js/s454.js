@@ -9,7 +9,7 @@ Date.prototype.s454 = function(days_up_to_unix_epoch, debug) {
     // constants
     var one_day_in_ms = 86400000;
     // The UNIX timestamp here counts milliseconds since Jan 1, 1970.
-    var days_since_unix_epoch = Math.floor(this.getTime() / day_in_ms);
+    var days_since_unix_epoch = Math.floor(this.getTime() / one_day_in_ms);
     // How many days passed between Jan 1, 1 AD and Jan 1, 1970.
     // 719170;//719163;//719162
     debug = !(typeof debug === "undefined");
