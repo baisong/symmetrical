@@ -23,7 +23,7 @@ Date.prototype.s454 = function() {
     var loop = true;
     while (loop) {
         year++;
-        var nbDaysInCurrentYear = (52 * year + 166) % 293 < 52 ? 371 : 364;
+        var nbDaysInCurrentYear = (52 * year + 146) % 293 < 52 ? 371 : 364;
         if (day > nbDaysInCurrentYear)
             day -= nbDaysInCurrentYear;
         else
