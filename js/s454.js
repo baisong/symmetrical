@@ -22,11 +22,10 @@ Date.prototype.s454 = function(days_up_to_unix_epoch, debug) {
     if (debug) console.log('[2] # full cycles since 1AD: ' + cycles_since_epoch);
     var day = days_up_to_today % (full_cycle);
     if (debug) console.log('[3] days since last full cycle end: ' + day);
-    var year = 293 * cycles_since_epoch;
+    var year = (293 * cycles_since_epoch) + 1;
     if (debug) console.log('[4] year init: ' + year);
     var loop = true;
     while (loop) {
-        //year++;
         var nbDaysInCurrentYear = (s454_isLeap(year)) ? 371 : 364;
         if (day > nbDaysInCurrentYear) {
             year++;
@@ -36,7 +35,7 @@ Date.prototype.s454 = function(days_up_to_unix_epoch, debug) {
             loop = false;
         }
     }
-    var isLeap = ((52 * year + 166) % 293 < 52);
+    var isLeap = s454_isLeap(year);
     if (debug) console.log('[5] year done: ' + year + ((isLeap) ? ' (leap)' : ''));
     var month = 0;
     loop = true;
@@ -65,7 +64,7 @@ Date.prototype.s454 = function(days_up_to_unix_epoch, debug) {
 };
 
 function s454_isLeap(year) {
-    return ((52 * year + 146) % 293) < 52;
+    return (((52 * year) + 146) % 293) < 52;
 }
 
 function s454_assert(input, out, days) {
