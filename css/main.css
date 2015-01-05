@@ -10,12 +10,13 @@ body {
   border-radius: 10px;
   background: white;
   border: 1px solid #ddd;
+  height: 500px;
 }
 
 .s454-gregorian, .s454-symmetry454 {
   width: 20%;
   float: left;
-border: 1px solid blue;
+border: 1px solid #fdfdfd;
 padding: 5%;
 margin: 1%;
 }
@@ -25,7 +26,11 @@ margin: 1%;
 }
 .s454-converter label {
   margin-bottom: 1em;
+  float: left;
+  color: #555;
+  font-weight: bold;
 }
 .s454-converter input {
   clear: both;
+  float: left;
 }
