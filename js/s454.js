@@ -45,7 +45,7 @@ Date.prototype.s454 = function(days_up_to_unix_epoch, debug) {
     loop = true;
     if (debug) console.log('[6] day  init:')
     while (loop && month < 12) {
-        var daysInMonth = ((month % 3) - 2 == 0) ? month_long : month_short;
+        var daysInMonth = ((month % 3) - 1 == 0) ? month_long : month_short;
         if ((month == 11) && isLeap) {
             daysInMonth = month_long;
         }
