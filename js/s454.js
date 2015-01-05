@@ -11,8 +11,8 @@ Date.prototype.s454 = function(days_up_to_unix_epoch, debug) {
     var oneAD_to_1970 = 719163;
     var year_short = 364;
     var year_long = 371;
-    var month long = 35;
     var month_short = 28;
+    var month_long = 35;
     var days_since_unix_epoch = Math.floor(this.getTime() / one_day_in_ms);
     // How many days passed between Jan 1, 1 AD and Jan 1, 1970.
     // 719170;//719163;//719162
