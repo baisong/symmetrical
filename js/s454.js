@@ -61,7 +61,7 @@ function s454_isLeap(year) {
 
 function s454_assert(input, out) {
     var actual = (new Date(input)).s454();
-    if (actual.indexOf(out)) {
+    if (actual.indexOf(out) !== -1) {
         console.log('PASSED: "' + input + '" => "' + out + '"');
     }
     else {
