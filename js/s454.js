@@ -5,20 +5,22 @@
  *
  * Algorithm adapted from https://github.com/mvanbesien/calendars
  */
-Date.prototype.s454 = function(days_since_epoch, debug) {
+Date.prototype.s454 = function(days_up_to_unix_epoch, debug) {
     // constants
-    var day_in_ms = 86400000;
-    // # of days since Jan 1, 0 CE and UNIX epoch of Jan 1 1970.
-    //var days_since_epoch = 719170;
+    var one_day_in_ms = 86400000;
+    // The UNIX timestamp here counts milliseconds since Jan 1, 1970.
+    var days_since_unix_epoch = Math.floor(this.getTime() / day_in_ms);
+    // How many days passed between Jan 1, 1 AD and Jan 1, 1970.
+    // 719170;//719163;//719162
     debug = !(typeof debug === "undefined");
-    days_since_epoch = (typeof days_since_epoch === "undefined") ? 719170 : days_since_epoch;
+    days_up_to_unix_epoch = (typeof days_up_to_unix_epoch === "undefined") ? 719170 : days_up_to_unix_epoch;
     var full_cycle = 293 * 365 + 71;
-
-    var refDay = parseInt((this.getTime() / day_in_ms) + days_since_epoch);
-    if (debug) console.log('[1] refDay: ' + refDay);
-    var cycles_since_epoch = parseInt(refDay / (full_cycle));
-    if (debug) console.log('[2] # full cycles since 0AD: ' + cycles_since_epoch);
-    var day = refDay % (full_cycle);
+    console.log('[0] the date:' + this.toISOString());
+    var days_up_to_today = parseInt(days_up_to_unix_epoch + days_since_epoch);
+    if (debug) console.log('[1] Days up to today: ' + days_up_to_today);
+    var cycles_since_epoch = parseInt(days_up_to_today / (full_cycle));
+    if (debug) console.log('[2] # full cycles since 1AD: ' + cycles_since_epoch);
+    var day = days_up_to_today % (full_cycle);
     if (debug) console.log('[3] days since last full cycle end: ' + day);
     var year = 293 * cycles_since_epoch;
     if (debug) console.log('[4] year init: ' + year);
