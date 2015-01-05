@@ -77,7 +77,7 @@ function s454_runtests(days) {
     var start = 719170 - 366;
     var limit = 366 * 2;
     var one_passed = false;
-    var passed_counts = [0, 0, 0];
+    var pass_counts = [0, 0, 0];
     for (var i = 0; i < limit; i++) {
         var passed = 0;
         for (var j = 0; j < 2; j++) {
@@ -93,7 +93,7 @@ function s454_runtests(days) {
         }
     }
     console.log('Pass counts:');
-    console.log(passed_counts);
+    console.log(pass_counts);
 }
 
 function s454_test(timestamp, days) {
