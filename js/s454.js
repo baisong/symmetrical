@@ -59,25 +59,33 @@ function s454_isLeap(year) {
     return ((52 * year + 146) % 293) < 52;
 }
 
-function s454_assert(input, out) {
-    var actual = (new Date(input)).s454();
-    if (actual.indexOf(out) !== -1) {
-        console.log('PASSED: "' + input + '" => "' + out + '"');
-    }
-    else {
-        console.log('FAILED: "' + input + '" => "' + out + '" ACTUAL: "' + actual + '"');
-    }
+function s454_assert(input, out, days) {
+    var actual = (new Date(input)).s454(days);
+    return (actual.indexOf(out) !== -1);
 }
 
-function s454_runtests() {
+function s454_runtests(days) {
+    /*
     var year = 2008;
     for (var i = 0; i < 8; i++) {
         answer = (s454_isLeap(year + i)) ? 'LEAP' : '';
         console.log(parseInt(year + i) + ': ' + answer);
     }
-    
-    s454_assert('Dec 28 2014', 'Dec 28 2014');
-    s454_assert('Dec 29 2014', 'Jan 1 2015');
+    */
+    var inputs = ['Dec 28 2014', 'Dec 29 2014'];
+    var expecteds = ['Dec 28, 2014', 'Jan 1, 2015'];
+    var start = 719170 - 366;
+    var limit = 366 * 2;
+    for (var i = 0; i < limit; i++) {
+        var passed = true;
+        for (var j = 0; j < 2; j++) {
+            console.log(inputs[j] + ' ?= ' + expecteds[j]);
+            if (!s454_assert(inputs[j], expecteds[j])) {
+                passed = false;
+            }
+        }
+        console.log((passed) ? 'PASSED' : 'failed');
+    }
 }
 
 function s454_test(timestamp, days) {
