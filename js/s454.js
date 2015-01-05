@@ -80,11 +80,11 @@ function s454_runtests(days) {
         var passed = true;
         for (var j = 0; j < 2; j++) {
             console.log(inputs[j] + ' ?= ' + expecteds[j]);
-            if (!s454_assert(inputs[j], expecteds[j])) {
+            if (!s454_assert(inputs[j], expecteds[j], start + i)) {
                 passed = false;
             }
         }
-        console.log((passed) ? 'PASSED' : 'failed');
+        console.log((passed) ? 'PASSED: ' + (start + i) : 'failed');
     }
 }
 
