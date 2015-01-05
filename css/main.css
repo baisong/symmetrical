@@ -11,3 +11,17 @@ body {
   background: white;
   border: 1px solid #ddd;
 }
+
+.s454-gregorian, .s454-symmetry454 {
+  width: 30%;
+border: 1px solid blue;
+padding: 10%;
+margin: 1%;
+}
+
+.s454-converter label {
+  margin-bottom: 1em;
+}
+.s454-converter input {
+  clear: both;
+}
