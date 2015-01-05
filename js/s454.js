@@ -54,6 +54,31 @@ Date.prototype.s454 = function(days_since_epoch) {
     return date;
 };
 
+function s454_isLeap(year) {
+    return ((52 * year + 146) % 293) < 52;
+}
+
+function s454_assert(in, out) {
+    var actual = (new Date(in)).s454();
+    if (actual.indexOf(out)) {
+        console.log('PASSED: "' + in + '" => "' + out + '"');
+    }
+    else {
+        console.log('FAILED: "' + in + '" => "' + out + '" ACTUAL: "' + actual + '"');
+    }
+}
+
+function s454_runtests() {
+    var year = 2008;
+    for (var i = 0; i < 8; i++) {
+        answer = (s454_isLeap(year + i)) ? 'LEAP' : '';
+        console.log(year + ': ' + answer);
+    }
+    
+    s454_assert('Dec 28 2014', 'Dec 28 2014');
+    s454_assert('Dec 29 2014', 'Jan 1 2015');
+}
+
 function s454_test(timestamp, days) {
   return (new Date(timestamp)).s454(days);
 }
