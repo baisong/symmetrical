@@ -27,14 +27,14 @@ Date.prototype.s454 = function(days_up_to_unix_epoch, debug) {
     var loop = true;
     while (loop) {
         year++;
-        var nbDaysInCurrentYear = (52 * year + 146) % 293 < 52 ? 371 : 364;
+        var nbDaysInCurrentYear = (s454_isLeap(year)) ? 371 : 364;
         if (day > nbDaysInCurrentYear)
             day -= nbDaysInCurrentYear;
         else
             loop = false;
     }
     var isLeap = ((52 * year + 166) % 293 < 52);
-    if (debug) console.log('[5] year done: ' + year + ((isLeap) ? ' (leap)' : ' (not leap)'));
+    if (debug) console.log('[5] year done: ' + year + ((isLeap) ? ' (leap)' : ''));
     var month = 0;
     loop = true;
     if (debug) console.log('[6] day  init:')
