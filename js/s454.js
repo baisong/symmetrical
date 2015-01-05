@@ -8,13 +8,17 @@
 Date.prototype.s454 = function(days_up_to_unix_epoch, debug) {
     // constants
     var one_day_in_ms = 86400000;
-    // The UNIX timestamp here counts milliseconds since Jan 1, 1970.
+    var oneAD_to_1970 = 719163;
+    var year_short = 364;
+    var year_long = 371;
+    var month long = 35;
+    var month_short = 28;
     var days_since_unix_epoch = Math.floor(this.getTime() / one_day_in_ms);
     // How many days passed between Jan 1, 1 AD and Jan 1, 1970.
     // 719170;//719163;//719162
     debug = !(typeof debug === "undefined");
-    days_up_to_unix_epoch = (typeof days_up_to_unix_epoch === "undefined") ? 719163 : days_up_to_unix_epoch;
-    var full_cycle = 293 * 365 + 71;
+    days_up_to_unix_epoch = (typeof days_up_to_unix_epoch === "undefined") ? oneAD_to_1970 : days_up_to_unix_epoch;
+    var full_cycle = 294 * 364;//293 * 365 + 71;
     if (debug) console.log('[0] the date:' + this.toISOString());
     var days_up_to_today = parseInt(days_up_to_unix_epoch + days_since_unix_epoch);
     if (debug) console.log('[1] Days up to today: ' + days_up_to_today);
@@ -22,11 +26,11 @@ Date.prototype.s454 = function(days_up_to_unix_epoch, debug) {
     if (debug) console.log('[2] # full cycles since 1AD: ' + cycles_since_epoch);
     var day = days_up_to_today % (full_cycle);
     if (debug) console.log('[3] days since last full cycle end: ' + day);
-    var year = (293 * cycles_since_epoch) + 1;
+    var year = (294 * cycles_since_epoch);//293
     if (debug) console.log('[4] year init: ' + year);
     var loop = true;
     while (loop) {
-        var nbDaysInCurrentYear = (s454_isLeap(year)) ? 371 : 364;
+        var nbDaysInCurrentYear = (s454_isLeap(year)) ? year_long : year_short;
         if (day > nbDaysInCurrentYear) {
             year++;
             day -= nbDaysInCurrentYear;
@@ -41,9 +45,9 @@ Date.prototype.s454 = function(days_up_to_unix_epoch, debug) {
     loop = true;
     if (debug) console.log('[6] day  init:')
     while (loop && month < 12) {
-        var daysInMonth = ((month % 3) - 2 == 0) ? 35 : 28;
+        var daysInMonth = ((month % 3) - 2 == 0) ? month_long : month_short;
         if ((month == 11) && isLeap) {
-            daysInMonth = 35;
+            daysInMonth = month_long;
         }
         if (day > daysInMonth) {
             month++;
