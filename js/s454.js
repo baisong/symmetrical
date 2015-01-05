@@ -5,11 +5,12 @@
  *
  * Algorithm adapted from https://github.com/mvanbesien/calendars
  */
-Date.prototype.s454 = function() {
+Date.prototype.s454 = function(days_since_epoch) {
     // constants
     var day_in_ms = 86400000;
     // # of days since Jan 1, 0 CE and UNIX epoch of Jan 1 1970.
-    var days_since_epoch = 719170;
+    //var days_since_epoch = 719170;
+    days_since_epoch = (typeof days_since_epoch === "undefined") ? 719170 : days_since_epoch;
     var full_cycle = 293 * 365 + 71;
 
     var refDay = parseInt((this.getTime() / day_in_ms) + days_since_epoch);
