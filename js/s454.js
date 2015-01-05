@@ -73,7 +73,7 @@ function s454_runtests() {
     var year = 2008;
     for (var i = 0; i < 8; i++) {
         answer = (s454_isLeap(year + i)) ? 'LEAP' : '';
-        console.log(year + ': ' + answer);
+        console.log(parseInt(year + i) + ': ' + answer);
     }
     
     s454_assert('Dec 28 2014', 'Dec 28 2014');
