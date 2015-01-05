@@ -26,7 +26,7 @@ Date.prototype.s454 = function(days_up_to_unix_epoch, debug) {
     if (debug) console.log('[2] # full cycles since 1AD: ' + cycles_since_epoch);
     var day = days_up_to_today % (full_cycle);
     if (debug) console.log('[3] days since last full cycle end: ' + day);
-    var year = (293 * cycles_since_epoch);//293
+    var year = 1 + (293 * cycles_since_epoch);//293
     if (debug) console.log('[4] year init: ' + year);
     var loop = true;
     while (loop) {
