@@ -162,7 +162,7 @@ Date.prototype.toSymmetry454Short = function() {
     var weekdays = ["M", "T", "W", "H", "F", "A", "S"];
     //var months = ["JA", "FE", "MC", "AP", "MY", "JN", "JL", "AU", "SE", "OC", "NV", "DE"];
     //var date = parseInt(year) + months[month] + (Math.floor((day - 1) / 7) + 1) + weekdays[weekday];
-    var date = parseInt(year) + '-' + ((m > 9) ? '0' : '') + m + '-' + (Math.floor((day - 1) / 7) + 1) + weekdays[weekday];
+    var date = parseInt(year) + '-' + ((m < 10) ? '0' : '') + m + '-' + (Math.floor((day - 1) / 7) + 1) + weekdays[weekday];
 
     return date;
 };
