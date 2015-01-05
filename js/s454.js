@@ -5,22 +5,23 @@
  *
  * Algorithm adapted from https://github.com/mvanbesien/calendars
  */
-Date.prototype.s454 = function(days_since_epoch) {
+Date.prototype.s454 = function(days_since_epoch, debug) {
     // constants
     var day_in_ms = 86400000;
     // # of days since Jan 1, 0 CE and UNIX epoch of Jan 1 1970.
     //var days_since_epoch = 719170;
+    debug = !(typeof days_since_epoch === "undefined");
     days_since_epoch = (typeof days_since_epoch === "undefined") ? 719170 : days_since_epoch;
     var full_cycle = 293 * 365 + 71;
 
     var refDay = parseInt((this.getTime() / day_in_ms) + days_since_epoch);
-    console.log('[1] refDay: ' + refDay);
+    if (debug) console.log('[1] refDay: ' + refDay);
     var cycles_since_epoch = parseInt(refDay / (full_cycle));
-    console.log('[2] # full cycles since 0AD: ' + cycles_since_epoch);
+    if (debug) console.log('[2] # full cycles since 0AD: ' + cycles_since_epoch);
     var day = refDay % (full_cycle);
-    console.log('[3] days since last full cycle end: ' + day);
+    if (debug) console.log('[3] days since last full cycle end: ' + day);
     var year = 293 * cycles_since_epoch;
-    console.log('[4] year init: ' + year);
+    if (debug) console.log('[4] year init: ' + year);
     var loop = true;
     while (loop) {
         year++;
@@ -31,10 +32,10 @@ Date.prototype.s454 = function(days_since_epoch) {
             loop = false;
     }
     var isLeap = ((52 * year + 166) % 293 < 52);
-    console.log('[5] year done: ' + year + ((isLeap) ? ' (leap)' : ' (not leap)'));
+    if (debug) console.log('[5] year done: ' + year + ((isLeap) ? ' (leap)' : ' (not leap)'));
     var month = 0;
     loop = true;
-    console.log('[6] day  init:')
+    if (debug) console.log('[6] day  init:')
     while (loop && month < 12) {
         var daysInMonth = ((month % 3) - 2 == 0) ? 35 : 28;
         if (day > daysInMonth) {
@@ -43,8 +44,8 @@ Date.prototype.s454 = function(days_since_epoch) {
         } else
             loop = false;
     }
-    console.log('[7] day  done: ' + day);
-    console.log('[8] mnth done: ' + month);
+    if (debug) console.log('[7] day  done: ' + day);
+    if (debug) console.log('[8] mnth done: ' + month);
 
     var weekday = parseInt(day + 6) % 7;
     var weekdays = ["Mon", "Tues", "Wednes", "Thurs", "Fri", "Satur", "Sun"];
