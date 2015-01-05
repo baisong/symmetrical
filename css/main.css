@@ -14,11 +14,11 @@ body {
 }
 
 .s454-gregorian, .s454-symmetry454 {
-  width: 20%;
+  width: 200px;
   float: left;
 border: 1px solid #fdfdfd;
-padding: 5%;
-margin: 1%;
+padding: 20px;
+margin: 4px;
 }
 
 .s454-converter {
