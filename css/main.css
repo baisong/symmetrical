@@ -13,12 +13,16 @@ body {
 }
 
 .s454-gregorian, .s454-symmetry454 {
-  width: 30%;
+  width: 20%;
+  float: left;
 border: 1px solid blue;
-padding: 10%;
+padding: 5%;
 margin: 1%;
 }
 
+.s454-converter {
+  margin: 0 auto;
+}
 .s454-converter label {
   margin-bottom: 1em;
 }
