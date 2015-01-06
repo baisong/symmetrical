@@ -1,3 +1,8 @@
+
+function s454_isLeap(year) {
+    return (((52 * year) + 146) % 293) < 52;
+}
+
 /**
  * Returns an array of 4 integers, for year, month, week and day.
  */
