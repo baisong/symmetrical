@@ -35,6 +35,10 @@ margin: 4px;
   float: left;
 }
 
+#calendar {
+  clear: both;
+}
+
 .quarter, .month, .week, .day {
   float: left;
   display: block;
@@ -44,9 +48,18 @@ margin: 4px;
   clear: both;
 }
 
+.month {
+  border-top: 1px solid gray;
+  border-left: 1px solid gray
+  border-bottom: 1px solid gray;
+  margin-right: 20px;
+  margin-bottom: 20px;
+}
+
 .day {
   width:20px;
   height: 20px;
-  border: 1px solid gray;
+  border-right: 1px solid gray;
+  border-bottom: 1px solid gray;
   margin: 0;
 }
