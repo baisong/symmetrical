@@ -40,6 +40,7 @@ margin: 4px;
   clear: both;
   margin: 0 auto;
   width: 700px;
+  margin-bottom: 40px;
 }
 
 .quarter, .month, .week, .day {
