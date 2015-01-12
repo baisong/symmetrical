@@ -70,3 +70,7 @@ margin: 4px;
 .day:hover {
   background-color: #ddd;
 }
+
+.wd6, .wd7 {
+  background-color: #f5f5f5;
+}
