@@ -34,3 +34,15 @@ margin: 4px;
   clear: both;
   float: left;
 }
+
+.quarter, .month, .week, .day {
+  float: left;
+  display: block;
+}
+
+.day {
+  width:20px;
+  height: 20px;
+  border: 1px solid gray;
+  margin: 0;
+}
