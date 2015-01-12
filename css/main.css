@@ -23,6 +23,7 @@ margin: 4px;
 
 .s454-converter {
   margin: 0 auto;
+  width: 700px;
 }
 .s454-converter label {
   margin-bottom: 1em;
@@ -38,6 +39,7 @@ margin: 4px;
 #calendar {
   clear: both;
   margin: 0 auto;
+  width: 700px;
 }
 
 .quarter, .month, .week, .day {
