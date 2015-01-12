@@ -40,6 +40,10 @@ margin: 4px;
   display: block;
 }
 
+.month, .week {
+  clear: both;
+}
+
 .day {
   width:20px;
   height: 20px;
