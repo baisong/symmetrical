@@ -24,9 +24,8 @@
         </div>
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
         <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
-        <!--<script src="js/s454.js"></script>-->
-        <script src="js/symmetrical.old.js"></script>
-        <script src="js/main.js"></script>
+        <script src="js/s454.js"></script>
+        <script src="js/symmetrical.js"></script>
         <!--<script src="js/main.js"></script> -->
     </body>
 </html>

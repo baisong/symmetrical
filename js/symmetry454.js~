@@ -21,7 +21,6 @@ Date.prototype.toSymmetry454 = function() {
     var days_up_to_today = parseInt(days_up_to_unix_epoch + days_since_unix_epoch);
     var cycles_since_epoch = parseInt(days_up_to_today / full_cycle);
     var day = days_up_to_today % (full_cycle);
-    var daynum = day;
     var year = 1 + (293 * cycles_since_epoch);
     var loop = true;
     while (loop) {
@@ -57,8 +56,6 @@ Date.prototype.toSymmetry454 = function() {
     var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     var date = weekdays[weekday] + 'day, ' + months[month] + ' '  + day + ' ' + parseInt(year);
 
-    year = parseInt(year);
-    // etc...
     return [parseInt(year), (month + 1), (Math.floor((day - 1) / 7) + 1), ((parseInt(day + 6) % 7) + 1)];
 };
 

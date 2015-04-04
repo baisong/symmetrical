@@ -11,7 +11,7 @@ $(document).ready(function() {
         if (/^(0?[1-9]|1[012])[\/\-](0?[1-9]|[12][0-9]|3[01])[\/\-]\d{4}$/.test(dateText)) {
 		    	/* var s454 = (new Date(dateText)).toSymmetry454String();
 		    	var s454o = (new Date(dateText)).toSymmetry454(); */
-		    	sd = symmetrical.getFromDate(new Date(dateText));
+		    	sd = symmetrical.format(new Date(dateText));
 		    	var year = sd.year;
 		    	var month = sd.month;
 		    	var quarter = sd.quarter;
@@ -32,12 +32,7 @@ $(document).ready(function() {
     			var $calendar = $('#calendar');
     			$calendar.find('.day').each(function() {
     			  var $this = $(this);
-    			  var day = parseInt($this.data('day'));
-    			  if (day > 0) {
-    			    var sd = symmetrical.getFromYearDay(year, day);
-    			    var gd = symmetrical.getGregorian(year, day);
-    			    
-    			  }
+    			  $this.data('day');
     			});
 		    }
 		  }

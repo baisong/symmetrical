@@ -19,7 +19,9 @@ Date.prototype.s454 = function() {
     var days_since_unix_epoch = Math.floor(this.getTime() / one_day_in_ms);
     var days_up_to_today = parseInt(days_up_to_unix_epoch + days_since_unix_epoch);
     var cycles_since_epoch = parseInt(days_up_to_today / full_cycle);
+    
     var day = days_up_to_today % (full_cycle);
+    var daynum = day;
     var year = 1 + (293 * cycles_since_epoch);
     var loop = true;
     while (loop) {
@@ -95,3 +97,60 @@ function s454_runtests(days) {
 function s454_test(timestamp, days) {
   return (new Date(timestamp)).s454(days);
 }
+
+function s454_toGregorian(year, daynum) {
+    // constants
+    var year_short = 364;
+    var year_long = 371;
+    var month_short = 28;
+    var month_long = 35;
+    var days_up_to_unix_epoch = 719163;
+    var full_cycle = 294 * 364;
+    var one_day_in_ms = 86400000;
+    var unix_epoch_year = 1970;
+    var unix_epoch_daynum = 4;
+    var unix_epoch = 0;
+    var date = new Date('1970-01-01T00:00:00.000Z')
+    // @TODO while different, add/subtract days.
+    // 1. go down to day zero or up to day 364/371
+    // 2. down year or up year (check length)
+    // 3. adjust day num.
+    // someDate.setDate(someDate.getDate() + numberOfDaysToAdd); 
+    // Determine the year and day number.
+    var days_since_unix_epoch = Math.floor((new Date('1/1/1970').getTime() / one_day_in_ms));
+    var days_up_to_today = parseInt(days_up_to_unix_epoch + days_since_unix_epoch);
+    var cycles_since_epoch = parseInt(days_up_to_today / full_cycle);
+    var day = days_up_to_today % (full_cycle);
+    var year = 1 + (293 * cycles_since_epoch);
+    var loop = true;
+    while (loop) {
+        var nbDaysInCurrentYear = (s454_isLeap(year)) ? year_long : year_short;
+        if (day > nbDaysInCurrentYear) {
+            year++;
+            day -= nbDaysInCurrentYear;
+        }
+        else {
+            loop = false;
+        }
+    }
+    
+    // Determine the month and date.
+    var isLeap = s454_isLeap(year);
+    var month = 0;
+    loop = true;
+    while (loop && month < 12) {
+        var daysInMonth = ((month % 3) - 1 == 0) ? month_long : month_short;
+        if ((month == 11) && isLeap) {
+            daysInMonth = month_long;
+        }
+        if (day > daysInMonth) {
+            month++;
+            day -= daysInMonth;
+        } else {
+            loop = false;
+        }
+    }
+
+    return date;
+}
+
