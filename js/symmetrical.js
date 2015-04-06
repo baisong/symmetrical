@@ -110,8 +110,8 @@ symmetrical.alternateMonthRule = {
     short: 30,
     long: 31
 };
-symmetrical.getLeapCoefficient = function (leapCycleYears) {
-    return (leapCycleYears - 1) / 2;
+symmetrical.getLeapCoefficient = function (leapCycle) {
+    return (leapCycle.years - 1) / 2;
 };
 /**
  * TEST: 365.24232082
@@ -147,22 +147,6 @@ symmetrical.weekdayAdjust = function (fixedDate) {
 };
 
 /**
- * Symmetry454 and Symmetry010 calendar arithmetic functions boil down to three main calculations:
- * 1. Find where the calendar year starts: the Symmetry454 = Symmetry010 New Year Day.
- * 2. Optionally determine if the year is a Symmetry454 = Symmetry010 leap year (usually not necessary).
- * 3. Compute the parameters that are set by the calendar structure, which are same for all Symmetry454 and
- * Symmetry010 years: ordinal day number, ordinal week number, quarters, months, weeks, days,
- * weekdays. Some of these parameters are optional, depending on the application requirements.
- */
-symmetrical.symToFixed = function (symDate) {
-
-};
-
-symmetrical.fixedToSym = function (fixedDate) {
-
-};
-
-/**
  * To convert a Gregorian date to a fixed date, which can then be converted to a Symmetry454 or Symmetry010
  * date, it is convenient to calculate how many days have elapsed from the Gregorian epoch to the day before the
  * Gregorian year started, then add in the ordinal day number within the Gregorian year.
@@ -195,6 +179,10 @@ symmetrical.priorElapsedDays = function (gregYear) {
     return days;
 };
 
+/**
+ * @FIXME needs definition!
+ * @param fixedDate
+ */
 symmetrical.fixedToGreg = function (fixedDate) {
 
 };
@@ -207,11 +195,6 @@ symmetrical.gregToSym = function (gregDate) {
     return this.fixedToSym(this.gregToFixed(gregDate));
 };
 
-
-symmetrical.symToGreg1 = function (symDate) {
-
-};
-
 /**
  * isSymLeapYear( SymYear ) = modulus( L ! SymYear + K, C ) < L
  where C is the number of years per cycle = 293 (a prime number), L is the number of leap years per cycle = 52,
@@ -219,14 +202,10 @@ symmetrical.symToGreg1 = function (symDate) {
  operation ensures that leap years are as smoothly spread as possible.
  The quantity modulus( L ! SymYear + K, C ) is also known as the accumulator.
  */
-symmetrical.isSymLeapYear = function (symYear) {
-    /**
-     * modulus( L ! SymYear + K, C ) < L
-     where C is the number of years per cycle = 293 (a prime number), L is the number of leap years per cycle = 52,
-     and K = (C-1) / 2 = 146. The K coefficient ensures that leap years are symmetrically arranged, and the modulus
-     operation ensures that leap years are as smoothly spread as possible.
-     The quantity modulus( L ! SymYear + K, C ) is also known as the accumulator.
-     */
+symmetrical.isSymLeapYear = function (symYear, leapCycle) {
+    var leapCycle = leapCycle || this.defaultLeapCycle;
+    var accumulator = this.modulus(L * symYear + this.getLeapCoefficient(leapCycle), leapCycle.years);
+    return accumulator < leapCycle.leaps;
 };
 
 /**
@@ -239,7 +218,7 @@ symmetrical.symNewYearDay = function (symYear, leapCycle) {
     var leapCycle = leapCycle || this.defaultLeapCycle;
     var priorYear = symYear - 1;
     var shortTotal = this.symEpoch + (this.yearShort() * priorYear);
-    var K = this.getLeapCoefficient(leapCycle.years);
+    var K = this.getLeapCoefficient(leapCycle);
     var leapTotal = this.floor(((leapCycle.leaps * priorYear) + K) / leapCycle.years);
     return shortTotal + leapTotal;
 };
@@ -268,7 +247,7 @@ symmetrical.symDaysBeforeMonth = function (symMonth, monthRule) {
  */
 symmetrical.symDayOfYear = function (symMonth, symDay, monthRule) {
     var monthRule = monthRule || this.defaultMonthRule;
-    return this.symDaysBeforeMonth(symMonth) + symDay;
+    return this.symDaysBeforeMonth(symMonth, monthRule) + symDay;
 };
 
 /**
@@ -313,6 +292,14 @@ symmetrical.fixedToSymYear = function (fixedDate, leapCycle) {
     return symYear;
 };
 
+/**
+ * Symmetry454 and Symmetry010 calendar arithmetic functions boil down to three main calculations:
+ * 1. Find where the calendar year starts: the Symmetry454 = Symmetry010 New Year Day.
+ * 2. Optionally determine if the year is a Symmetry454 = Symmetry010 leap year (usually not necessary).
+ * 3. Compute the parameters that are set by the calendar structure, which are same for all Symmetry454 and
+ * Symmetry010 years: ordinal day number, ordinal week number, quarters, months, weeks, days,
+ * weekdays. Some of these parameters are optional, depending on the application requirements.
+ */
 symmetrical.fixedToSym = function (fixedDate, leapCycle) {
     var leapCycle = leapCycle || this.defaultLeapCycle;
     var symYear = this.fixedToSymYear(fixedDate, leapCycle);
@@ -369,6 +356,7 @@ symmetrical.fixedToSymFull = function (fixedDate, leapCycle, monthRule, maxMonth
 
 /**
  TEST DATA
+ @TODO Jest
  */
 symmetrical.testData = [
     {
