@@ -9,12 +9,6 @@ Date.prototype.getDayNum = function() {
 
 var symmetrical = {};
 
-symmetrical.calendars = [
-    's454', // Symmetry454, the perpetual calendar with months of length 28, 35, 28 each quarter.
-    's010', // Symmetry010, the perpetual calendar with months of length 30, 31, 30 each quarter.
-    'greg', // Gregorian, a solar calendar introduced by Pope Gregory XIII in 1582 to fix a problem with Easter dates.
-    'rata'  // Rata Die, integer representation of dates. 1 at midnight (00:00) local time on January 1, AD 1 in
-];
 symmetrical.months = {
     1: {
         name: 'January'
@@ -58,11 +52,30 @@ symmetrical.months = {
 };
 
 symmetrical.weekLength = 7;
-symmetrical.floor = function(){};
-symmetrical.cieling = function(){};
-symmetrical.quotient = function(){};
-symmetrical.modulus = function(){};
-symmetrical.amod = function(){};
+symmetrical.weeksInShortYear = 52;
+symmetrical.weeksInLongYear = 53;
+symmetrical.yearShort = function() {
+    return this.weeksInShortYear * this.weekLength;
+};
+symmetrical.yearLong = function() {
+    return this.weeksInLongYear * this.weekLength;
+};
+symmetrical.floor = function(x){
+    return Math.floor(x);
+};
+symmetrical.cieling = function(){
+    return Math.cieling(x);
+};
+symmetrical.quotient = function(x, y){
+    return this.floor(x / y);
+};
+symmetrical.modulus = function(x, y){
+    return x - (y * this.quotient(x, y));
+};
+symmetrical.amod = function(x, y){
+    return y + this.modulus(x, (-1 * y));
+};
+
 /**
  * The Symmetry454 and Symmetry010 calendars share the same epoch as the Gregorian calendar, starting on
  * Monday, January 1, 1 AD. This is the same epoch as that of the ISO calendar and the Revised Julian calendar
@@ -71,6 +84,26 @@ symmetrical.amod = function(){};
 symmetrical.symEpoch = 1;
 
 symmetrical.gregEpoch = 0;
+
+symmetrical.defaultLeapCycle = {
+    years: 293,
+    leaps: 52
+};
+symmetrical.alternateLeapCycle = {
+    years: 389,
+    leaps: 69
+};
+symmetrical.defaultMonthRule = {
+    short: 28,
+    long: 35
+};
+symmetrical.alternateMonthRule = {
+    short: 30,
+    long: 31
+};
+symmetrical.getLeapCoefficient = function (leapCycleYears) {
+    return (leapCycleYears - 1) / 2;
+};
 
 /**
  * The focus of CC3 is on conversion of any date on any calendar to or from a rata die, or fixed day number.
@@ -128,6 +161,11 @@ symmetrical.gregToFixed = function(gregDate) {
  * Returns the number of calendar days that have elapsed from the Gregorian
  * epoch until the beginning of the New Year Day of the specified Gregorian year number:
  * @param gregYear
+ *
+ * @FIXME refactor to a functional definition/usage, like:
+ *
+ * priorElapsedDays = sum(map(getYearLength, getPriorYears(year)));
+ *
  */
 symmetrical.priorElapsedDays = function(gregYear) {
     var priorYear = gregYear - 1;
@@ -154,4 +192,49 @@ symmetrical.gregToSym = function (gregDate) {
 
 symmetrical.symToGreg1 = function(symDate) {
 
+};
+
+/**
+ * isSymLeapYear( SymYear ) = modulus( L ! SymYear + K, C ) < L
+ where C is the number of years per cycle = 293 (a prime number), L is the number of leap years per cycle = 52,
+ and K = (C-1) / 2 = 146. The K coefficient ensures that leap years are symmetrically arranged, and the modulus
+ operation ensures that leap years are as smoothly spread as possible.
+ The quantity modulus( L ! SymYear + K, C ) is also known as the accumulator.
+ */
+symmetrical.isSymLeapYear = function(symYear) {
+    /**
+     * modulus( L ! SymYear + K, C ) < L
+     where C is the number of years per cycle = 293 (a prime number), L is the number of leap years per cycle = 52,
+     and K = (C-1) / 2 = 146. The K coefficient ensures that leap years are symmetrically arranged, and the modulus
+     operation ensures that leap years are as smoothly spread as possible.
+     The quantity modulus( L ! SymYear + K, C ) is also known as the accumulator.
+      */
+};
+
+/**
+ * @TODO SymNewYearDay( )
+ *
+ * TEST: symNewYearDay(2010) == 733776
+ * TEST: symNewYearDay(2010, alternate) == 733769
+ */
+symmetrical.symNewYearDay = function(symYear, leapCycle) {
+    var leapCycle = leapCycle || this.defaultLeapCycle;
+    var priorYear = symYear - 1;
+    var shortTotal = this.symEpoch + (this.yearShort() * priorYear);
+    var K = this.getLeapCoefficient(leapCycle.years);
+    var leapTotal = this.floor(((leapCycle.leaps * priorYear) + K) / leapCycle.years);
+    return shortTotal + leapTotal;
+};
+
+/**
+ * TEST: 6 => 154
+ * TEST: 6, alt => 152
+ * @param symMonth
+ * @param monthRule
+ * @returns {number}
+ */
+symmetrical.symDaysBeforeMonth = function(symMonth, monthRule) {
+    var monthRule = monthRule || this.defaultMonthRule;
+    var difference = monthRule.long - monthRule.short;
+    return (monthRule.short * (symMonth - 1)) + (difference * this.quotient(symMonth, 3));
 };
