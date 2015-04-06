@@ -2,8 +2,8 @@
  * Created by oren on 4/4/15.
  */
 
-Date.prototype.getDayNum = function() {
-    var onejan = new Date(this.getFullYear(),0,1);
+Date.prototype.getDayNum = function () {
+    var onejan = new Date(this.getFullYear(), 0, 1);
     return Math.ceil((this - onejan) / 86400000);
 };
 
@@ -50,29 +50,36 @@ symmetrical.months = {
         name: 'Irvember'
     }
 };
-
+symmetrical.defaultMaxMonth = 12;
+symmetrical.quarters = 4;
 symmetrical.weekLength = 7;
 symmetrical.weeksInShortYear = 52;
 symmetrical.weeksInLongYear = 53;
-symmetrical.yearShort = function() {
+symmetrical.daysInQuarter = function () {
+    return (this.weeksInShortYear * this.weekLength) / this.quarters;
+};
+symmetrical.monthsInQuarter = function () {
+    return this.defaultMaxMonth / this.quarters;
+};
+symmetrical.yearShort = function () {
     return this.weeksInShortYear * this.weekLength;
 };
-symmetrical.yearLong = function() {
+symmetrical.yearLong = function () {
     return this.weeksInLongYear * this.weekLength;
 };
-symmetrical.floor = function(x){
+symmetrical.floor = function (x) {
     return Math.floor(x);
 };
-symmetrical.cieling = function(){
+symmetrical.cieling = function () {
     return Math.cieling(x);
 };
-symmetrical.quotient = function(x, y){
+symmetrical.quotient = function (x, y) {
     return this.floor(x / y);
 };
-symmetrical.modulus = function(x, y){
+symmetrical.modulus = function (x, y) {
     return x - (y * this.quotient(x, y));
 };
-symmetrical.amod = function(x, y){
+symmetrical.amod = function (x, y) {
     return y + this.modulus(x, (-1 * y));
 };
 
@@ -85,10 +92,12 @@ symmetrical.symEpoch = 1;
 
 symmetrical.gregEpoch = 0;
 
+// northward equinox
 symmetrical.defaultLeapCycle = {
     years: 293,
     leaps: 52
 };
+// north solstice
 symmetrical.alternateLeapCycle = {
     years: 389,
     leaps: 69
@@ -104,7 +113,16 @@ symmetrical.alternateMonthRule = {
 symmetrical.getLeapCoefficient = function (leapCycleYears) {
     return (leapCycleYears - 1) / 2;
 };
-
+/**
+ * TEST: 365.24232082
+ * TEST: (alt) 365.241645
+ * @param leapCycle
+ * @returns {number}
+ */
+symmetrical.getLeapCycleMeanYear = function (leapCycle) {
+    var daysPerCycle = (leapCycle.years * this.yearShort()) + (leapCycle.leaps * this.weekLength);
+    return (1.00000000 * daysPerCycle) / leapCycle.years;
+};
 /**
  * The focus of CC3 is on conversion of any date on any calendar to or from a rata die, or fixed day number.
  * Gregorian January 1, 1 AD, the first day of the first millennium, is defined as fixed day number one, a Monday.
@@ -117,14 +135,14 @@ symmetrical.getLeapCoefficient = function (leapCycleYears) {
 /**
  * FixedToWeekdayNum( FixedDate ) = modulus( floor( FixedDate ) – WeekdayAdjust, 7 )
  */
-symmetrical.fixedToWeekdayNum = function(fixedDate) {
+symmetrical.fixedToWeekdayNum = function (fixedDate) {
     return this.modulus(this.floor(fixedDate) - this.weekdayAdjust(fixedDate), this.weekLength);
 };
 
 /**
  * WeekdayAdjust = modulus( SymEpoch – 1, 7 )
  */
-symmetrical.weekdayAdjust = function(fixedDate) {
+symmetrical.weekdayAdjust = function (fixedDate) {
     return this.modulus(this.symEpoch - fixedDate, this.weekLength);
 };
 
@@ -136,11 +154,11 @@ symmetrical.weekdayAdjust = function(fixedDate) {
  * Symmetry010 years: ordinal day number, ordinal week number, quarters, months, weeks, days,
  * weekdays. Some of these parameters are optional, depending on the application requirements.
  */
-symmetrical.symToFixed = function(symDate) {
+symmetrical.symToFixed = function (symDate) {
 
 };
 
-symmetrical.fixedToSym = function(fixedDate) {
+symmetrical.fixedToSym = function (fixedDate) {
 
 };
 
@@ -150,7 +168,7 @@ symmetrical.fixedToSym = function(fixedDate) {
  * Gregorian year started, then add in the ordinal day number within the Gregorian year.
  * @param gregDate
  */
-symmetrical.gregToFixed = function(gregDate) {
+symmetrical.gregToFixed = function (gregDate) {
     var gregYear = gregDate.getYear();
     var dayNum = gregDate.getDayNum();
     var days = this.priorElapsedDays(gregYear);
@@ -167,7 +185,7 @@ symmetrical.gregToFixed = function(gregDate) {
  * priorElapsedDays = sum(map(getYearLength, getPriorYears(year)));
  *
  */
-symmetrical.priorElapsedDays = function(gregYear) {
+symmetrical.priorElapsedDays = function (gregYear) {
     var priorYear = gregYear - 1;
     var days = this.gregEpoch + (priorYear * 365);
     days += this.floor(priorYear / 4);
@@ -177,11 +195,11 @@ symmetrical.priorElapsedDays = function(gregYear) {
     return days;
 };
 
-symmetrical.fixedToGreg = function(fixedDate) {
+symmetrical.fixedToGreg = function (fixedDate) {
 
 };
 
-symmetrical.symToGreg = function(symDate) {
+symmetrical.symToGreg = function (symDate) {
     return this.fixedToGreg(this.symToFixed(symDate));
 };
 
@@ -190,7 +208,7 @@ symmetrical.gregToSym = function (gregDate) {
 };
 
 
-symmetrical.symToGreg1 = function(symDate) {
+symmetrical.symToGreg1 = function (symDate) {
 
 };
 
@@ -201,14 +219,14 @@ symmetrical.symToGreg1 = function(symDate) {
  operation ensures that leap years are as smoothly spread as possible.
  The quantity modulus( L ! SymYear + K, C ) is also known as the accumulator.
  */
-symmetrical.isSymLeapYear = function(symYear) {
+symmetrical.isSymLeapYear = function (symYear) {
     /**
      * modulus( L ! SymYear + K, C ) < L
      where C is the number of years per cycle = 293 (a prime number), L is the number of leap years per cycle = 52,
      and K = (C-1) / 2 = 146. The K coefficient ensures that leap years are symmetrically arranged, and the modulus
      operation ensures that leap years are as smoothly spread as possible.
      The quantity modulus( L ! SymYear + K, C ) is also known as the accumulator.
-      */
+     */
 };
 
 /**
@@ -217,7 +235,7 @@ symmetrical.isSymLeapYear = function(symYear) {
  * TEST: symNewYearDay(2010) == 733776
  * TEST: symNewYearDay(2010, alternate) == 733769
  */
-symmetrical.symNewYearDay = function(symYear, leapCycle) {
+symmetrical.symNewYearDay = function (symYear, leapCycle) {
     var leapCycle = leapCycle || this.defaultLeapCycle;
     var priorYear = symYear - 1;
     var shortTotal = this.symEpoch + (this.yearShort() * priorYear);
@@ -233,8 +251,267 @@ symmetrical.symNewYearDay = function(symYear, leapCycle) {
  * @param monthRule
  * @returns {number}
  */
-symmetrical.symDaysBeforeMonth = function(symMonth, monthRule) {
+symmetrical.symDaysBeforeMonth = function (symMonth, monthRule) {
     var monthRule = monthRule || this.defaultMonthRule;
     var difference = monthRule.long - monthRule.short;
     return (monthRule.short * (symMonth - 1)) + (difference * this.quotient(symMonth, 3));
 };
+
+/**
+ * TEST 6, 17 => 171
+ * TEST 6, 17, alt => 169
+ *
+ * @param symMonth
+ * @param symDay
+ * @param monthRule
+ * @returns {*}
+ */
+symmetrical.symDayOfYear = function (symMonth, symDay, monthRule) {
+    var monthRule = monthRule || this.defaultMonthRule;
+    return this.symDaysBeforeMonth(symMonth) + symDay;
+};
+
+/**
+ * TEST:  2009, 4, 5 => 733500
+ * @param symYear
+ * @param symMonth
+ * @param symDay
+ * @param monthRule
+ * @returns {*}
+ */
+symmetrical.symToFixed = function (symYear, symMonth, symDay, monthRule) {
+    var monthRule = monthRule || this.defaultMonthRule;
+    return this.symNewYearDay(symYear) + this.symDayOfYear(symMonth, symDay, monthRule);
+};
+
+/**
+ * TEST: 733649 => 2009
+ * TEST: 733406 => 2008
+ * @param fixedDate
+ * @param leapCycle
+ */
+symmetrical.fixedToSymYear = function (fixedDate, leapCycle) {
+    var leapCycle = leapCycle || this.defaultLeapCycle;
+    var meanYear = this.getLeapCycleMeanYear(leapCycle);
+    var symYear = this.cieling((fixedDate - this.symEpoch) / meanYear);
+    var startOfYear = this.symNewYearDay(symYear);
+    if (startOfYear < fixedDate) {
+        // SymYear starts before FixedDate and is either correct or needs to be incremented
+        if ((fixedDate - startOfYear) >= this.yearShort()) {
+            var startOfNextYear = this.symNewYearDay(symYear + 1);
+            if (fixedDate >= startOfNextYear) {
+                // FixedDate is on or after the start of next year, so next year is the correct year.
+                // Increment the estimated year number and return its New Year Day
+                symYear++;
+            } // otherwise FixedDate is in the leap week of SymYear
+        } // otherwise FixedDate is within SymYear
+    }
+    else if (startOfYear > fixedDate) {
+        // Estimated SymYear too far into the future, go back a year and recalculate the New Year Day
+        symYear--;
+    }
+    return symYear;
+};
+
+symmetrical.fixedToSym = function (fixedDate, leapCycle) {
+    var leapCycle = leapCycle || this.defaultLeapCycle;
+    var symYear = this.fixedToSymYear(fixedDate, leapCycle);
+    var startOfYear = this.symNewYearDay(symYear);
+    var dayOfYear = fixedDate - startOfYear + 1;
+    return {
+        year: symYear,
+        dayOfYear: dayOfYear
+    };
+};
+
+symmetrical.symMonthOfQuarter = function (symDate, monthRule, maxMonth) {
+    var monthRule = monthRule || this.defaultMonthRule;
+    var maxMonth = maxMonth || this.defaultMaxMonth;
+    var maxMonthOfQuarter = 3;
+    if (maxMonth > 12) {
+        maxMonthOfQuarter = 4;
+    }
+    // @FIXME refactor to use either named constants, or more intuitive derivation.
+    if (monthRule.short == this.defaultMonthRule.short) {
+        var monthOfQuarter = Math.min(maxMonthOfQuarter, this.cieling((2 / 9) * symDate.weekOfQuarter));
+    }
+    else if (monthRule.short == this.alternateMonthRule.short) {
+        var monthOfQuarter = Math.min(maxMonthOfQuarter, this.cieling(symDate.dayOfQuarter / 30.5));
+    }
+    return monthOfQuarter;
+};
+
+symmetrical.fixedToSymFull = function (fixedDate, leapCycle, monthRule, maxMonth) {
+    var leapCycle = leapCycle || this.defaultLeapCycle;
+    var monthRule = monthRule || this.defaultMonthRule;
+    var maxMonth = maxMonth || this.defaultMaxMonth;
+    var symDate = this.fixedToSym(fixedDate, leapCycle);
+    symDate.yearWeek = this.cieling(symDate.dayOfYear / this.weekLength);
+    symDate.quarter = this.cieling((this.quarters / this.weeksInLongYear) * symDate.yearWeek);
+    symDate.dayOfQuarter = symDate.dayOfYear - (this.daysInQuarter() * symDate.quarter) + this.daysInQuarter();
+    symDate.weekOfQuarter = this.cieling(symDate.dayOfQuarter / this.weekLength);
+    symDate.monthOfQuarter = this.symMonthOfQuarter(symDate, monthRule, maxMonth);
+    symDate.monthOfYear = this.monthsInQuarter() * (symDate.quarter - 1) + symDate.monthOfQuarter;
+    // @TODO
+    // mediumFormat i.e. "Apr 1, 2015"
+    // dayOfMonth = DayOfYear – DaysBeforeMonth( SymMonth )
+    // dayOfWeek = FixedToWeekdayNum( FixedDate ) OR JUST dayOfYear mod 7
+    // @TODO ?
+    // leapCycle
+    // yearOfLeapCycle
+    // daysInYear
+    // weeksInYear
+    // isLeap
+    // daysInMonth
+    // weeksInMonth
+    // weekOfMonth
+};
+
+/**
+ TEST DATA
+ */
+symmetrical.testData = [
+    {
+        "gregorianDate": "Apr 26, –121",
+        "rataDie": "–44,444",
+        "fixedDay2001": -774929,
+        "julianDay": 1676980,
+        "weekDay": "Sat",
+        "defSym454": "Apr 27, –121",
+        "defSym010": "Apr 27, –121",
+        "altSym454": "Apr 27, –121",
+        "altSym010": "Apr 27, –121"
+    },
+    {
+        "gregorianDate": "Sep 27,–91",
+        "rataDie": "–33,333",
+        "fixedDay2001": -763818,
+        "julianDay": 1688091,
+        "weekDay": "Mon",
+        "defSym454": "Sep 22, –91",
+        "defSym010": "Sep 24, –91",
+        "altSym454": "Sep 22, –91",
+        "altSym010": "Sep 24, –91"
+    },
+    {
+        "gregorianDate": "Sep 7,122",
+        "rataDie": "44444",
+        "fixedDay2001": -686041,
+        "julianDay": 1765868,
+        "weekDay": "Mon",
+        "defSym454": "Sep 8, 122",
+        "defSym010": "Sep 10, 122",
+        "altSym454": "Sep 8, 122",
+        "altSym010": "Sep 10, 122"
+    },
+    {
+        "gregorianDate": "Jul 4,1776",
+        "rataDie": "648491",
+        "fixedDay2001": -81994,
+        "julianDay": 2369915,
+        "weekDay": "Thu",
+        "defSym454": "Jul 4, 1776",
+        "defSym010": "Jul 4, 1776",
+        "altSym454": "Jul 4, 1776",
+        "altSym010": "Jul 4, 1776"
+    },
+    {
+        "gregorianDate": "Jul 1,1867",
+        "rataDie": "681724",
+        "fixedDay2001": -48761,
+        "julianDay": 2403148,
+        "weekDay": "Mon",
+        "defSym454": "Jul 1, 1867",
+        "defSym010": "Jul 1, 1867",
+        "altSym454": "Jul 1, 1867",
+        "altSym010": "Jul 1, 1867"
+    },
+    {
+        "gregorianDate": "Oct 24,1947",
+        "rataDie": "711058",
+        "fixedDay2001": -19427,
+        "julianDay": 2432482,
+        "weekDay": "Fri",
+        "defSym454": "Oct 26, 1947",
+        "defSym010": "Oct 26, 1947",
+        "altSym454": "Oct 26, 1947",
+        "altSym010": "Oct 26, 1947"
+    },
+    {
+        "gregorianDate": "Aug 10, 1995",
+        "rataDie": "728515",
+        "fixedDay2001": -1970,
+        "julianDay": 2449939,
+        "weekDay": "Thu",
+        "defSym454": "Aug 11, 1995",
+        "defSym010": "Aug 9, 1995",
+        "altSym454": "Aug 11, 1995",
+        "altSym010": "Aug 9, 1995"
+    },
+    {
+        "gregorianDate": "Feb 29, 2000",
+        "rataDie": "730179",
+        "fixedDay2001": -306,
+        "julianDay": 2451603,
+        "weekDay": "Tue",
+        "defSym454": "Feb 30, 2000",
+        "defSym010": "Feb 28, 2000",
+        "altSym454": "Feb 30, 2000",
+        "altSym010": "Feb 28, 2000"
+    },
+    {
+        "gregorianDate": "May 2, 2004",
+        "rataDie": "731703",
+        "fixedDay2001": 1218,
+        "julianDay": 2453127,
+        "weekDay": "Sun",
+        "defSym454": "May 7, 2004",
+        "defSym010": "May 5, 2004",
+        "altSym454": "May 7, 2004",
+        "altSym010": "May 5, 2004"
+    },
+    {
+        "gregorianDate": "Dec 31, 2004",
+        "rataDie": "731946",
+        "fixedDay2001": 1461,
+        "julianDay": 2453370,
+        "weekDay": "Fri",
+        "defSym454": "Dec 33, 2004", // Or Irv 5, 2004
+        "defSym010": "Dec 35, 2004", // Or Irv 5, 2004
+        "altSym454": "Jan 5, 2005",
+        "altSym010": "Jan 5, 2005"
+    },
+    {
+        "gregorianDate": "Feb 20, 2020",
+        "rataDie": "737475",
+        "fixedDay2001": 6990,
+        "julianDay": 2458899,
+        "weekDay": "Thu",
+        "defSym454": "Feb 25, 2020",
+        "defSym010": "Feb 23, 2020",
+        "altSym454": "Feb 25, 2020",
+        "altSym010": "Feb 23, 2020"
+    },
+    {
+        "gregorianDate": "Feb 2, 2222",
+        "rataDie": "811236",
+        "fixedDay2001": 80751,
+        "julianDay": 2532660,
+        "weekDay": "Sat",
+        "defSym454": "Feb 6, 2222",
+        "defSym010": "Feb 4, 2222",
+        "altSym454": "Feb 6, 2222",
+        "altSym010": "Feb 4, 2222"
+    },
+    {
+        "gregorianDate": "Mar 1, 3333",
+        "rataDie": "1217048",
+        "fixedDay2001": 486563,
+        "julianDay": 2938472,
+        "weekDay": "Sun",
+        "defSym454": "Feb 35, 3333",
+        "defSym010": "Mar 2, 3333",
+        "altSym454": "Feb 35, 3333",
+        "altSym010": "Mar 2, 3333"
+    }
+];

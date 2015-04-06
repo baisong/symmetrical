@@ -40,11 +40,9 @@
       <file leaf-file-name="symmetrical.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/js/symmetrical.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.96852046" vertical-offset="2647" max-vertical-offset="3660">
-              <caret line="240" column="0" selection-start-line="240" selection-start-column="0" selection-end-line="240" selection-end-column="0" />
-              <folding>
-                <element signature="e#0#37#0" expanded="false" />
-              </folding>
+            <state vertical-scroll-proportion="0.015739769" vertical-offset="4440" max-vertical-offset="7830">
+              <caret line="297" column="34" selection-start-line="297" selection-start-column="34" selection-end-line="297" selection-end-column="34" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -133,6 +131,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="LayoutCode.rearrangeEntriesJavaScript 1.5" value="false" />
   </component>
   <component name="RunManager">
     <configuration default="true" type="PHPUnitRunConfigurationType" factoryName="PHPUnit">
@@ -226,11 +225,9 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/js/symmetrical.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.96852046" vertical-offset="2647" max-vertical-offset="3660">
-          <caret line="240" column="0" selection-start-line="240" selection-start-column="0" selection-end-line="240" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#37#0" expanded="false" />
-          </folding>
+        <state vertical-scroll-proportion="0.015739769" vertical-offset="4440" max-vertical-offset="7830">
+          <caret line="297" column="34" selection-start-line="297" selection-start-column="34" selection-end-line="297" selection-end-column="34" />
+          <folding />
         </state>
       </provider>
     </entry>
