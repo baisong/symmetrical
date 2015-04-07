@@ -2,43 +2,8 @@
  * @TODO
  *
  * 1. Add high-level convert() function
- *    - Takes Date object or symDate object
- *    - Returns the proper converted object
- *    - Takes as params:
- *      > format = 'object|short|medium|long'
- *      > distinctFormatting = true
- *      > alternateMonthRule = false
- *      > alternateLeapRule = false
- *      > alternateMaxMonth = false
  * 2. Verify tests using convert() (see symmetrical-test.js)
  */
-
-/**
- * Formats
- *
- * Gregorian
- * Micro    12/31
- * Short    12/31/1999
- * Standard Dec 31, 1999
- * Medium   Sun, Dec 31, 1999
- * Long     Sunday, December 31, 1999
- *
- * Symmetrical (Ambiguous formatting)
- * Micro    12/35
- * Short    12/35/1999
- * Standard Dec 35, 1999
- * Medium   Sun, Dec 35, 1999
- * Long     Sunday, December 35th 1999
- *
- * Symmetrical (Distinct formatting)
- * Micro    12/5/Sun
- * Short    1999/12/5/Sun
- * Standard 5/Sun, Dec 1999
- * Medium   5th Sunday, Dec 1999
- * Long     5th Sunday of December 1999
- *
- */
-
 
 Date.prototype.getDayNum = function () {
     var onejan = new Date(this.getFullYear(), 0, 1);
@@ -47,6 +12,15 @@ Date.prototype.getDayNum = function () {
 
 var symmetrical = {};
 
+symmetrical.weekdays = {
+    1: {name: 'Monday'},
+    2: {name: 'Tueday'},
+    3: {name: 'Wednesday'},
+    4: {name: 'Thursday'},
+    5: {name: 'Friday'},
+    6: {name: 'Saturday'},
+    7: {name: 'Sunday'}
+};
 symmetrical.months = {
     1: {
         name: 'January'
@@ -88,8 +62,24 @@ symmetrical.months = {
         name: 'Irvember'
     }
 };
+symmetrical.getWeekdayAbbr = function(weekdayNum) {
+    return this.weekdays[weekdayNum].name.substring(0, 3);
+};
 symmetrical.getMonthAbbr = function(monthNum) {
     return this.months[monthNum].name.substring(0, 3);
+};
+symmetrical.getOrdinalSuffix = function(number) {
+    if (number > 3 && number < 21) return 'th';
+    switch (number % 10) {
+        case 1:
+            return "st";
+        case 2:
+            return "nd";
+        case 3:
+            return "rd";
+        default:
+            return "th";
+    }
 };
 symmetrical.defaultMaxMonth = 12;
 symmetrical.alternateMaxMonth = 13;
@@ -263,8 +253,15 @@ symmetrical.fixedToGregNegative = function (fixedDate) {
 };
 
 /**
- * @FIXME needs definition!
- * @param fixedDate
+ *
+ */
+symmetrical.gregToDateObj = function(gregDate) {
+    var date = new Date(gregDate.year, 0);
+    return new Date(date.setDate(gregDate.dayOfYear));
+};
+
+/**
+ *
  */
 symmetrical.fixedToGreg = function (fixedDate) {
     var epochYear = this.gregYearLength(this.gregEpoch);
@@ -275,15 +272,22 @@ symmetrical.fixedToGreg = function (fixedDate) {
         var gregDate = this.fixedToGregNegative(fixedDate);
     }
 
-    return gregDate;
+    return this.gregToDateObj(gregDate);
 };
 
-symmetrical.symToGreg = function (symDate) {
-    return this.fixedToGreg(this.symToFixed(symDate));
+symmetrical.symToGreg = function (symDate, leapCycle, monthRule) {
+    var leapCycle = leapCycle || this.defaultLeapCycle;
+    var monthRule = monthRule || this.defaultMonthRule;
+    var fixedDate = this.symToFixed(symDate.year, symDate.monthOfYear, symDate.dayOfMonth, leapCycle, monthRule);
+    return this.fixedToGreg(fixedDate);
 };
 
-symmetrical.gregToSym = function (gregDate) {
-    return this.fixedToSymFull(this.gregToFixed(gregDate));
+symmetrical.gregToSym = function (gregDate, leapCycle, monthRule, maxMonth) {
+    var leapCycle = leapCycle || this.defaultLeapCycle;
+    var monthRule = monthRule || this.defaultMonthRule;
+    var maxMonth = maxMonth || this.defaultMaxMonth;
+    var fixedDate = this.gregToFixed(gregDate);
+    return this.fixedToSymFull(fixedDate, leapCycle, monthRule, maxMonth);
 };
 
 /**
@@ -343,9 +347,9 @@ symmetrical.symDayOfYear = function (symMonth, symDay, monthRule) {
  * @param monthRule
  * @returns {number}
  */
-symmetrical.symToFixed = function (symYear, symMonth, symDay, monthRule) {
+symmetrical.symToFixed = function (symYear, symMonth, symDay, leapCycle, monthRule) {
     var monthRule = monthRule || this.defaultMonthRule;
-    var newYearDay = this.symNewYearDay(symYear);
+    var newYearDay = this.symNewYearDay(symYear, leapCycle);
     var dayOfYear = this.symDayOfYear(symMonth, symDay, monthRule);
     return newYearDay + dayOfYear - 1;
 };
@@ -424,9 +428,20 @@ symmetrical.fixedToSymFull = function (fixedDate, leapCycle, monthRule, maxMonth
     symDate.weekOfQuarter = this.ceiling(symDate.dayOfQuarter / this.weekLength);
     symDate.monthOfQuarter = this.symMonthOfQuarter(symDate, monthRule, maxMonth);
     symDate.monthOfYear = this.monthsInQuarter() * (symDate.quarter - 1) + symDate.monthOfQuarter;
+    symDate.monthShort = this.getMonthAbbr(symDate.monthOfYear);
+    symDate.monthLong = this.months[symDate.monthOfYear].name;
     symDate.dayOfMonth = symDate.dayOfYear - this.symDaysBeforeMonth(symDate.monthOfYear, monthRule);
-    symDate.mediumFormat = [this.getMonthAbbr(symDate.monthOfYear), symDate.dayOfMonth + ',', symDate.year].join(' ');
+    symDate.dayOfMonthSuffix = this.getOrdinalSuffix(symDate.dayOfMonth);
+    symDate.weekOfMonth = this.ceiling(symDate.dayOfMonth / this.weekLength);
+    symDate.weekOfMonthSuffix = this.getOrdinalSuffix(symDate.weekOfMonth);
     symDate.dayOfWeek = this.modulus(symDate.dayOfYear, 7);
+    symDate.dayOfWeekShort = this.getWeekdayAbbr(dayOfWeek);
+    symDate.dayOfWeekLong = this.weekdays[dayOfWeek].name;
+    symDate.micro = this.formatSym(symDate, 'micro');
+    symDate.short = this.formatSym(symDate, 'short');
+    symDate.standard = this.formatSym(symDate, 'standard');
+    symDate.medium = this.formatSym(symDate, 'medium');
+    symDate.long = this.formatSym(symDate, 'long');
     // @TODO ?
     // leapCycle
     // yearOfLeapCycle
@@ -592,5 +607,225 @@ symmetrical.testData = [
         "altSym010": "Mar 2, 3333"
     }
 ];
+
+/**
+ * Returns either a Date object, a symDate object, or false for invalid input.
+ */
+symmetrical.cleanSource = function(source) {};
+symmetrical.isDateObj = function(source) {};
+symmetrical.isSymDate = function(source) {};
+symmetrical.convertDateObjectToSymDate = function(dateObj, altMonthRule, altLeapCycle, altMaxMonth) {
+    var altMonthRule = altMonthRule || false;
+    var altLeapCycle = altLeapCycle || false;
+    var altMaxMonth = altMaxMonth || false;
+    var monthRule = this.defaultMonthRule;
+    var leapCycle = this.defaultLeapCycle;
+    var maxMonth = this.defaultMaxMonth;
+    if (altMonthRule) {
+        monthRule = this.alternateMonthRule;
+    }
+    if (altLeapCycle) {
+        leapCycle = this.alternateLeapCycle;
+    }
+    if (altMaxMonth) {
+        maxMonth = this.alternateMaxMonth;
+    }
+    return this.gregToSym(symDate, leapCycle, monthRule, maxMonth);
+};
+
+symmetrical.convertSymDateToDateObject = function(symDate, altMonthRule, altLeapCycle) {
+    var altMonthRule = altMonthRule || false;
+    var altLeapCycle = altLeapCycle || false;
+    var monthRule = this.defaultMonthRule;
+    var leapCycle = this.defaultLeapCycle;
+    if (altMonthRule) {
+        monthRule = this.alternateMonthRule;
+    }
+    if (altLeapCycle) {
+        leapCycle = this.alternateLeapCycle;
+    }
+    return this.symToGreg(symDate, leapCycle, monthRule);
+};
+
+/**
+ * Symmetrical formats (Ambiguous formatting)
+ * Micro    12/35
+ * Short    12/35/1999
+ * Standard Dec 35, 1999
+ * Medium   Sun, Dec 35, 1999
+ * Long     Sunday, December 35th 1999
+ */
+symmetrical.formatSymAmbiguous = function(symDate, format) {
+    formatted = false;
+    switch (format) {
+        case 'micro':
+            formatted = [symDate.monthOfYear, symDate.dayOfMonth].join('/');
+            break;
+        case 'short':
+            formatted = [symDate.monthOfYear, symDate.dayOfMonth, symDate.year].join('/');
+            break;
+        case 'standard':
+            formatted = [symDate.monthShort, symDate.dayOfMonth + ',', symDate.year].join(' ');
+            break;
+        case 'medium':
+            formatted = [symDate.dayOfWeekShort + ',', symDate.monthShort, symDate.dayOfMonth + ',', symDate.year].join(' ');
+            break;
+        case 'long':
+            formatted = [symDate.dayOfWeekLong + ',', symDate.monthLong, symDate.dayOfMonth + symDate.dayOfMonthSuffix, symDate.year].join(' ');
+            break;
+    }
+
+    return formatted;
+};
+
+/**
+ * Symmetrical (Distinct formatting)
+ * Micro    1999/12/5/7
+ * Short    1999/12/5/Sun
+ * Standard 5/Sun, Dec 1999
+ * Medium   5th Sunday, Dec 1999
+ * Long     5th Sunday of December 1999
+ */
+symmetrical.formatSym = function(symDate, format) {
+    formatted = false;
+    switch (format) {
+        case 'micro':
+            formatted = [symDate.year, symDate.monthOfYear, symDate.weekOfMonth, symDate.dayOfWeek].join('/');
+            break;
+        case 'short':
+            formatted = [symDate.year, symDate.monthOfYear, symDate.weekOfMonth, symDate.dayOfWeekShort].join('/');
+            break;
+        case 'standard':
+            formatted = [symDate.weekOfMonth + '/' + symDate.dayOfWeekShort + ',', symDate.monthShort, symDate.year].join(' ');
+            break;
+        case 'medium':
+            formatted = [symDate.weekOfMonth + symDate.weekOfMonthSuffix, symDate.dayOfWeekLong + ',', symDate.monthShort, symDate.year].join(' ');
+            break;
+        case 'long':
+            formatted = [symDate.weekOfMonth + symDate.weekOfMonthSuffix, symDate.dayOfWeekLong, 'of', symDate.monthLong, symDate.year].join(' ');
+            break;
+    }
+
+    return formatted;
+};
+
+/**
+ * Gregorian date formats
+ * Micro    12/31
+ * Short    12/31/1999
+ * Standard Dec 31, 1999
+ * Medium   Sun, Dec 31, 1999
+ * Long     Sunday, December 31st 1999
+ */
+symmetrical.formatGreg = function(dateObj, format) {
+    formatted = false;
+    var dayOfMonth = dateObj.getDate();
+    var dayOfMonthSuffix = this.getOrdinalSuffix(dayOfMonth);
+    var dayOfWeek = dateObj.getDay() + 1;
+    var year = dateObj.getFullYear();
+    var monthOfYear = dateObj.getMonth();
+    var monthLong = this.months[monthOfYear].name;
+    var monthShort = this.getMonthAbbr(monthOfYear);
+    var dayOfWeekLong = this.weekdays[dayOfWeek];
+    var dayOfWeekShort = this.getWeekdayAbbr(dayOfWeek);
+    switch (format) {
+        case 'micro':
+            formatted = [monthOfYear, dayOfMonth].join('/');
+            break;
+        case 'short':
+            formatted = [monthOfYear, dayOfMonth, year].join('/');
+            break;
+        case 'standard':
+            formatted = [monthShort, dayOfMonth + ',', year].join(' ');
+            break;
+        case 'medium':
+            formatted = [dayOfWeekShort + ',', monthShort, dayOfMonth + ',', year].join(' ');
+            break;
+        case 'long':
+            formatted = [dayOfWeekLong + ',', monthLong, dayOfMonth + dayOfMonthSuffix + ',', year].join(' ');
+            break;
+    }
+
+    return formatted;
+};
+
+
+/**
+ * Formats
+ */
+symmetrical.format = function(date, target, format, distinctFormatting) {
+    var format = format || 'short';
+    if (format != 'micro' && format != 'short' && format != 'standard' && format != 'medium' && format != 'long') {
+        return 'Unknown format';
+    }
+    var formatted = 'Unknown target';
+    if (target == 'sym') {
+        var distinctFormatting = distinctFormatting || true;
+        if (distinctFormatting) {
+            formatted = this.formatSym(date, format);
+        }
+        else {
+            formatted = this.formatSymAmbiguous(date, format);
+        }
+    }
+    else if (target == 'greg') {
+        formatted = this.formatGreg(date, format);
+    }
+    return formatted;
+};
+
+/**
+ * Converts a date object to a symDate object or formatted string, OR converts a symDate to a date object.
+ *
+ * @param source (mixed)
+ *   Accepts a date object for gregorian-to-symmetrical conversions, OR one of the following symmetrical formats:
+ *   - object: {year: 1999, dayOfYear: 365} -- The output of symmetrical.convert()
+ *   - @TODO string: "Dec 35, 1999" -- The output of symmetrical.formatSymAmbiguous(symDate, 'standard');
+ *   - @TODO string: "1999/12/5/1" -- The output of symmetrical.formatSym(symDate, 'micro');
+ * @param format (string)
+ *   Defaults to 'object'. Use one of 'micro', 'short', 'standard', 'medium', or 'long' for formatted strings.
+ *   See symmetrical.format() for format definitions.
+ * @param distinctFormatting (bool)
+ *   Defaults to true. Only affects formatted (string) output when converting from gregorian to symmetrical. Distinct
+ *   formats like "1999/12/5/Sun" are unambiguously not gregorian dates. Use false for date strings like "12/35/1999".
+ *   See symmetrical.format() for format definitions.
+ * @param altMonthRule (bool)
+ *   Defaults to false, or "Symmetry454" month lengths 28 and 35. Use false for "Symmetry010" month lengths 30 and 31.
+ * @param altLeapCycle (bool)
+ *   Defaults to false. Use true to calculate leap years using the longer cycle that optimizes for north solstice.
+ * @param altMaxMonth (bool)
+ *   Defaults to false. Use true to treat leap week days as a separate 13th month "Irvember (Irv)"
+ */
+symmetrical.convert = function(source, format, distinctFormatting, altMonthRule, altLeapCycle, altMaxMonth) {
+    var source = this.cleanSource(source);
+    if (source === false) {
+        return false;
+    }
+    
+    var format = format || 'short';
+    var distinctFormatting = distinctFormatting || true;
+    var altMonthRule = altMonthRule || false;
+    var altLeapCycle = altLeapCycle || false;
+    var altMaxMonth = altMaxMonth || false;
+    var converted = false;
+    var target = false;
+    if (this.isDateObj(source)) {
+        target = 'sym';
+        converted = this.convertDateObjectToSymDate(source, altMonthRule, altLeapCycle, altMaxMonth);
+    }
+    else if (this.isSymDate(source)) {
+        target = 'greg';
+        converted = this.convertSymDateToDateObject(source, altMonthRule, altLeapCycle);
+    }
+    if (converted === false) {
+        return -1;
+    }
+    var formatted = converted;
+    if (format != 'object') {
+        formatted = this.format(converted, target, format, distinctFormatting);
+    }
+
+    return formatted;
+};
 
 module.exports = symmetrical;
