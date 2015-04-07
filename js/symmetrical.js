@@ -183,7 +183,7 @@ symmetrical.weekdayAdjust = function (fixedDate) {
  * @param gregDate
  */
 symmetrical.gregToFixed = function (gregDate) {
-    var gregYear = gregDate.getYear();
+    var gregYear = gregDate.getFullYear();
     var dayNum = gregDate.getDayNum();
     var days = this.priorElapsedDays(gregYear);
     return days + dayNum;
