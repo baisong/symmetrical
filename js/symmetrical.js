@@ -1,6 +1,44 @@
 /**
- * Created by oren on 4/4/15.
+ * @TODO
+ *
+ * 1. Add high-level convert() function
+ *    - Takes Date object or symDate object
+ *    - Returns the proper converted object
+ *    - Takes as params:
+ *      > format = 'object|short|medium|long'
+ *      > distinctFormatting = true
+ *      > alternateMonthRule = false
+ *      > alternateLeapRule = false
+ *      > alternateMaxMonth = false
+ * 2. Verify tests using convert() (see symmetrical-test.js)
  */
+
+/**
+ * Formats
+ *
+ * Gregorian
+ * Micro    12/31
+ * Short    12/31/1999
+ * Standard Dec 31, 1999
+ * Medium   Sun, Dec 31, 1999
+ * Long     Sunday, December 31, 1999
+ *
+ * Symmetrical (Ambiguous formatting)
+ * Micro    12/35
+ * Short    12/35/1999
+ * Standard Dec 35, 1999
+ * Medium   Sun, Dec 35, 1999
+ * Long     Sunday, December 35th 1999
+ *
+ * Symmetrical (Distinct formatting)
+ * Micro    12/5/Sun
+ * Short    1999/12/5/Sun
+ * Standard 5/Sun, Dec 1999
+ * Medium   5th Sunday, Dec 1999
+ * Long     5th Sunday of December 1999
+ *
+ */
+
 
 Date.prototype.getDayNum = function () {
     var onejan = new Date(this.getFullYear(), 0, 1);
@@ -54,6 +92,7 @@ symmetrical.getMonthAbbr = function(monthNum) {
     return this.months[monthNum].name.substring(0, 3);
 };
 symmetrical.defaultMaxMonth = 12;
+symmetrical.alternateMaxMonth = 13;
 symmetrical.quarters = 4;
 symmetrical.weekLength = 7;
 symmetrical.weeksInShortYear = 52;
@@ -89,10 +128,8 @@ symmetrical.amod = function (x, y) {
 /**
  * The Symmetry454 and Symmetry010 calendars share the same epoch as the Gregorian calendar, starting on
  * Monday, January 1, 1 AD. This is the same epoch as that of the ISO calendar and the Revised Julian calendar
- * @type {int}
  */
 symmetrical.symEpoch = 1;
-
 symmetrical.gregEpoch = 0;
 
 // northward equinox

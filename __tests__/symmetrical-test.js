@@ -1,5 +1,14 @@
+/**
+ * @TODO
+ *
+ * 1. Break up into smaller test suites
+ * 2. Add test suite for cross-calculating tabular example test data
+ */
 jest.dontMock('../js/symmetrical');
 
+/**
+ * 000 Jest test
+ */
 describe('[a] sum', function() {
     it('adds 1 + 2 to equal 3', function() {
         var symmetrical = require('../js/symmetrical');
@@ -7,13 +16,16 @@ describe('[a] sum', function() {
     });
 });
 
+
+/**
+ * 010 symNewYearDay
+ */
 describe('[b] symNewYearDay', function() {
     it('adds finds the fixed day for Jan 1 of a sym year', function() {
         var symmetrical = require('../js/symmetrical');
         expect(symmetrical.symNewYearDay(2010)).toBe(733776);
     });
 });
-
 describe('[c] symNewYearDay (alt leap cycle)', function() {
     it('adds finds the fixed day for Jan 1 of a sym year', function() {
         var symmetrical = require('../js/symmetrical');
@@ -21,13 +33,16 @@ describe('[c] symNewYearDay (alt leap cycle)', function() {
     });
 });
 
+
+/**
+ * 020 symDaysBeforeMonth
+ */
 describe('[d] symDaysBeforeMonth', function() {
     it('finds the number of days before a month in a given sym year', function() {
         var symmetrical = require('../js/symmetrical');
         expect(symmetrical.symDaysBeforeMonth(6)).toBe(154);
     });
 });
-
 describe('[e] symDaysBeforeMonth (alt month rule)', function() {
     it('finds the number of days before a month in a given sym year', function() {
         var symmetrical = require('../js/symmetrical');
@@ -35,6 +50,10 @@ describe('[e] symDaysBeforeMonth (alt month rule)', function() {
     });
 });
 
+
+/**
+ * 030 symDayOfYear
+ */
 describe('[f] symDayOfYear', function() {
     it('finds the ordinal number of a day of sym year based on month and day of month', function() {
         var symmetrical = require('../js/symmetrical');
@@ -49,6 +68,10 @@ describe('[g] symDayOfYear (alt month rule)', function() {
     });
 });
 
+
+/**
+ * 040 symToFixed
+ */
 describe('[h] symToFixed', function() {
     it('finds the fixed day number for a given sym date (year, month, day)', function() {
         var symmetrical = require('../js/symmetrical');
@@ -56,6 +79,9 @@ describe('[h] symToFixed', function() {
     });
 });
 
+/**
+ * 050 fixedToSymYear
+ */
 describe('[i] fixedToSymYear 1 of 3', function() {
     it('finds the sym year for a given fixed date', function() {
         var symmetrical = require('../js/symmetrical');
@@ -69,8 +95,6 @@ describe('[j] fixedToSymYear 2 of 3', function() {
         expect(symmetrical.fixedToSymYear(733406)).toBe(2009);
     });
 });
-
-
 describe('[j] fixedToSymYear 3 of 3', function() {
     it('finds the sym year for a given fixed date', function() {
         var symmetrical = require('../js/symmetrical');
