@@ -272,7 +272,7 @@ symmetrical.symNewYearDay = function (symYear, leapCycle) {
     var shortTotal = this.symEpoch + (this.yearShort() * priorYear);
     var K = this.getLeapCoefficient(leapCycle);
     var leapTotal = this.floor(((leapCycle.leaps * priorYear) + K) / leapCycle.years);
-    return shortTotal + leapTotal;
+    return shortTotal + (this.weekLength * leapTotal);
 };
 
 /**
