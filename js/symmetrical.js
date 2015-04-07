@@ -645,7 +645,7 @@ symmetrical.convertDateObjectToSymDate = function(dateObj, altMonthRule, altLeap
     if (altMaxMonth) {
         maxMonth = this.alternateMaxMonth;
     }
-    return this.gregToSym(symDate, leapCycle, monthRule, maxMonth);
+    return this.gregToSym(dateObj, leapCycle, monthRule, maxMonth);
 };
 
 symmetrical.convertSymDateToDateObject = function(symDate, altMonthRule, altLeapCycle) {
