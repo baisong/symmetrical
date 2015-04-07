@@ -308,7 +308,9 @@ symmetrical.symDayOfYear = function (symMonth, symDay, monthRule) {
  */
 symmetrical.symToFixed = function (symYear, symMonth, symDay, monthRule) {
     var monthRule = monthRule || this.defaultMonthRule;
-    return this.symNewYearDay(symYear) + this.symDayOfYear(symMonth, symDay, monthRule);
+    var newYearDay = this.symNewYearDay(symYear);
+    var dayOfYear = this.symDayOfYear(symMonth, symDay, monthRule);
+    return newYearDay + dayOfYear - 1;
 };
 
 /**
@@ -335,7 +337,7 @@ symmetrical.fixedToSymYear = function (fixedDate, leapCycle) {
         // Estimated SymYear too far into the future, go back a year and recalculate the New Year Day
         symYear--;
     }
-    return symYear - 1;
+    return symYear;
 };
 
 /**
