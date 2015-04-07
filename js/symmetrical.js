@@ -623,7 +623,8 @@ symmetrical.cleanSource = function(source) {
     return false;
 };
 symmetrical.isDateObj = function(dateObj) {
-    return (typeof dateObj.getDate == 'function' && typeof dateObj.getDay == 'function' && dateObj.getFullYear == 'function' && typeof dateObj.getMonth == 'function');
+    return dateObj instanceof Date;
+    //return (typeof dateObj.getDate == 'function' && typeof dateObj.getDay == 'function' && dateObj.getFullYear == 'function' && typeof dateObj.getMonth == 'function');
 };
 symmetrical.isSymDate = function(symDate) {
     return (typeof symDate.year != 'undefined' && symDate.dayOfYear != 'undefined');
