@@ -610,10 +610,24 @@ symmetrical.testData = [
 
 /**
  * Returns either a Date object, a symDate object, or false for invalid input.
+ *
+ * @TODO parse other formats.
  */
-symmetrical.cleanSource = function(source) {};
-symmetrical.isDateObj = function(source) {};
-symmetrical.isSymDate = function(source) {};
+symmetrical.cleanSource = function(source) {
+    if (this.isDateObj(source)) {
+        return source;
+    }
+    if (this.isSymDate(source)) {
+        return source;
+    }
+    return false;
+};
+symmetrical.isDateObj = function(dateObj) {
+    return (typeof dateObj.getDate == 'function' && typeof dateObj.getDay == 'function' && dateObj.getFullYear == 'function' && typeof dateObj.getMonth == 'function');
+};
+symmetrical.isSymDate = function(symDate) {
+    return (typeof symDate.year != 'undefined' && symDate.dayOfYear != 'undefined');
+};
 symmetrical.convertDateObjectToSymDate = function(dateObj, altMonthRule, altLeapCycle, altMaxMonth) {
     var altMonthRule = altMonthRule || false;
     var altLeapCycle = altLeapCycle || false;
