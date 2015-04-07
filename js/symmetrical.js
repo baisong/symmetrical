@@ -179,12 +179,63 @@ symmetrical.priorElapsedDays = function (gregYear) {
     return days;
 };
 
+symmetrical.gregYearLength = function (gregYear) {
+    var length = 365;
+    if (this.modulus(gregYear, 4) == 0 && this.modulus(gregYear, 100) != 0) {
+        length++;
+    }
+    else if (this.modulus(gregYear, 400) == 0) {
+        length++;
+    }
+    return length;
+};
+
+symmetrical.fixedToGregPositive = function (fixedDate) {
+    var gregYear = this.gregEpoch;
+    var yearLength = this.gregYearLength(gregYear);
+    var dayOfYear = fixedDate;
+    while (dayOfYear >= yearLength) {
+        dayOfYear -= yearLength;
+        gregYear++;
+        yearLength = this.gregYearLength(gregYear);
+    }
+
+    return {
+        year: gregYear,
+        dayOfYear: dayOfYear
+    };
+};
+
+symmetrical.fixedToGregNegative = function (fixedDate) {
+    var gregYear = this.gregEpoch;
+    var yearLength = this.gregYearLength(gregYear);
+    var dayOfYear = fixedDate;
+    while (dayOfYear < (this.gregEpoch - yearLength)) {
+        dayOfYear += yearLength;
+        gregYear--;
+        yearLength = this.gregYearLength(gregYear);
+    }
+
+    return {
+        year: gregYear,
+        dayOfYear: yearLength + dayOfYear
+    };
+};
+
 /**
  * @FIXME needs definition!
  * @param fixedDate
  */
 symmetrical.fixedToGreg = function (fixedDate) {
+    var epochYear = this.gregYearLength(this.gregEpoch);
+    if (fixedDate >= epochYear) {
+        var gregDate = this.fixedToGregPositive(fixedDate);
+    }
+    else {
+        var gregDate = this.fixedToGregNegative(fixedDate);
+    }
 
+    return gregDate;
 };
 
 symmetrical.symToGreg = function (symDate) {
@@ -354,6 +405,10 @@ symmetrical.fixedToSymFull = function (fixedDate, leapCycle, monthRule, maxMonth
     // weekOfMonth
 };
 
+symmetrical.sum = function(value1, value2) {
+    return value1 + value2;
+};
+
 /**
  TEST DATA
  @TODO Jest
@@ -503,3 +558,5 @@ symmetrical.testData = [
         "altSym010": "Mar 2, 3333"
     }
 ];
+
+module.exports = symmetrical;

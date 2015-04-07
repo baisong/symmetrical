@@ -1,0 +1,12 @@
+{
+  "scripts": {
+    "test": "jest"
+  },
+  "devDependencies": {
+    "jest-cli": "^0.4.0"
+  },
+  "jest": {
+    "testFileExtensions": ["js"],
+    "rootDir": "."
+  }
+}
