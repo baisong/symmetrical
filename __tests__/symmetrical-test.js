@@ -56,16 +56,24 @@ describe('[h] symToFixed', function() {
     });
 });
 
-describe('[i] fixedToSymYear 1 of 2', function() {
+describe('[i] fixedToSymYear 1 of 3', function() {
     it('finds the sym year for a given fixed date', function() {
         var symmetrical = require('../js/symmetrical');
         expect(symmetrical.fixedToSymYear(733649)).toBe(2009);
     });
 });
 
-describe('[j] fixedToSymYear 2 of 2', function() {
+describe('[j] fixedToSymYear 2 of 3', function() {
     it('finds the sym year for a given fixed date', function() {
         var symmetrical = require('../js/symmetrical');
-        expect(symmetrical.fixedToSymYear(733406)).toBe(2008);
+        expect(symmetrical.fixedToSymYear(733406)).toBe(2009);
+    });
+});
+
+
+describe('[j] fixedToSymYear 3 of 3', function() {
+    it('finds the sym year for a given fixed date', function() {
+        var symmetrical = require('../js/symmetrical');
+        expect(symmetrical.fixedToSymYear(733774)).toBe(2009);
     });
 });
