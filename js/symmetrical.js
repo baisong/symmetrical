@@ -50,6 +50,9 @@ symmetrical.months = {
         name: 'Irvember'
     }
 };
+symmetrical.getMonthAbbr = function(monthNum) {
+    return this.months[monthNum].name.substring(0, 3);
+};
 symmetrical.defaultMaxMonth = 12;
 symmetrical.quarters = 4;
 symmetrical.weekLength = 7;
@@ -243,7 +246,7 @@ symmetrical.symToGreg = function (symDate) {
 };
 
 symmetrical.gregToSym = function (gregDate) {
-    return this.fixedToSym(this.gregToFixed(gregDate));
+    return this.fixedToSymFull(this.gregToFixed(gregDate));
 };
 
 /**
@@ -260,10 +263,7 @@ symmetrical.isSymLeapYear = function (symYear, leapCycle) {
 };
 
 /**
- * @TODO SymNewYearDay( )
- *
- * TEST: symNewYearDay(2010) == 733776
- * TEST: symNewYearDay(2010, alternate) == 733769
+ * Returns the fixed date of Jan 1 of the given symmetrical year.
  */
 symmetrical.symNewYearDay = function (symYear, leapCycle) {
     var leapCycle = leapCycle || this.defaultLeapCycle;
@@ -275,8 +275,6 @@ symmetrical.symNewYearDay = function (symYear, leapCycle) {
 };
 
 /**
- * TEST: 6 => 154
- * TEST: 6, alt => 152
  * @param symMonth
  * @param monthRule
  * @returns {number}
@@ -288,9 +286,6 @@ symmetrical.symDaysBeforeMonth = function (symMonth, monthRule) {
 };
 
 /**
- * TEST 6, 17 => 171
- * TEST 6, 17, alt => 169
- *
  * @param symMonth
  * @param symDay
  * @param monthRule
@@ -302,7 +297,6 @@ symmetrical.symDayOfYear = function (symMonth, symDay, monthRule) {
 };
 
 /**
- * TEST:  2009, 4, 5 => 733500
  * @param symYear
  * @param symMonth
  * @param symDay
@@ -315,8 +309,6 @@ symmetrical.symToFixed = function (symYear, symMonth, symDay, monthRule) {
 };
 
 /**
- * TEST: 733649 => 2009
- * TEST: 733406 => 2008
  * @param fixedDate
  * @param leapCycle
  */
@@ -390,10 +382,9 @@ symmetrical.fixedToSymFull = function (fixedDate, leapCycle, monthRule, maxMonth
     symDate.weekOfQuarter = this.cieling(symDate.dayOfQuarter / this.weekLength);
     symDate.monthOfQuarter = this.symMonthOfQuarter(symDate, monthRule, maxMonth);
     symDate.monthOfYear = this.monthsInQuarter() * (symDate.quarter - 1) + symDate.monthOfQuarter;
-    // @TODO
-    // mediumFormat i.e. "Apr 1, 2015"
-    // dayOfMonth = DayOfYear – DaysBeforeMonth( SymMonth )
-    // dayOfWeek = FixedToWeekdayNum( FixedDate ) OR JUST dayOfYear mod 7
+    symDate.dayOfMonth = symDate.dayOfYear - this.symDaysBeforeMonth(symDate.monthOfYear, monthRule);
+    symDate.mediumFormat = [this.getMonthAbbr(symDate.monthOfYear), symDate.dayOfMonth + ',', symDate.year].join(' ');
+    symDate.dayOfWeek = this.modulus(symDate.dayOfYear, 7);
     // @TODO ?
     // leapCycle
     // yearOfLeapCycle
@@ -403,6 +394,7 @@ symmetrical.fixedToSymFull = function (fixedDate, leapCycle, monthRule, maxMonth
     // daysInMonth
     // weeksInMonth
     // weekOfMonth
+    return symDate;
 };
 
 symmetrical.sum = function(value1, value2) {
