@@ -73,8 +73,8 @@ symmetrical.yearLong = function () {
 symmetrical.floor = function (x) {
     return Math.floor(x);
 };
-symmetrical.cieling = function () {
-    return Math.cieling(x);
+symmetrical.ceiling = function (x) {
+    return Math.ceil(x);
 };
 symmetrical.quotient = function (x, y) {
     return this.floor(x / y);
@@ -264,6 +264,7 @@ symmetrical.isSymLeapYear = function (symYear, leapCycle) {
 
 /**
  * Returns the fixed date of Jan 1 of the given symmetrical year.
+ * @FIXME both leap cycles wrong
  */
 symmetrical.symNewYearDay = function (symYear, leapCycle) {
     var leapCycle = leapCycle || this.defaultLeapCycle;
@@ -297,11 +298,13 @@ symmetrical.symDayOfYear = function (symMonth, symDay, monthRule) {
 };
 
 /**
+ * Finds the fixed day number for a given sym date.
+ *
  * @param symYear
  * @param symMonth
  * @param symDay
  * @param monthRule
- * @returns {*}
+ * @returns {number}
  */
 symmetrical.symToFixed = function (symYear, symMonth, symDay, monthRule) {
     var monthRule = monthRule || this.defaultMonthRule;
@@ -315,7 +318,7 @@ symmetrical.symToFixed = function (symYear, symMonth, symDay, monthRule) {
 symmetrical.fixedToSymYear = function (fixedDate, leapCycle) {
     var leapCycle = leapCycle || this.defaultLeapCycle;
     var meanYear = this.getLeapCycleMeanYear(leapCycle);
-    var symYear = this.cieling((fixedDate - this.symEpoch) / meanYear);
+    var symYear = this.ceiling((fixedDate - this.symEpoch) / meanYear);
     var startOfYear = this.symNewYearDay(symYear);
     if (startOfYear < fixedDate) {
         // SymYear starts before FixedDate and is either correct or needs to be incremented
@@ -332,7 +335,7 @@ symmetrical.fixedToSymYear = function (fixedDate, leapCycle) {
         // Estimated SymYear too far into the future, go back a year and recalculate the New Year Day
         symYear--;
     }
-    return symYear;
+    return symYear - 1;
 };
 
 /**
@@ -363,10 +366,10 @@ symmetrical.symMonthOfQuarter = function (symDate, monthRule, maxMonth) {
     }
     // @FIXME refactor to use either named constants, or more intuitive derivation.
     if (monthRule.short == this.defaultMonthRule.short) {
-        var monthOfQuarter = Math.min(maxMonthOfQuarter, this.cieling((2 / 9) * symDate.weekOfQuarter));
+        var monthOfQuarter = Math.min(maxMonthOfQuarter, this.ceiling((2 / 9) * symDate.weekOfQuarter));
     }
     else if (monthRule.short == this.alternateMonthRule.short) {
-        var monthOfQuarter = Math.min(maxMonthOfQuarter, this.cieling(symDate.dayOfQuarter / 30.5));
+        var monthOfQuarter = Math.min(maxMonthOfQuarter, this.ceiling(symDate.dayOfQuarter / 30.5));
     }
     return monthOfQuarter;
 };
@@ -376,10 +379,10 @@ symmetrical.fixedToSymFull = function (fixedDate, leapCycle, monthRule, maxMonth
     var monthRule = monthRule || this.defaultMonthRule;
     var maxMonth = maxMonth || this.defaultMaxMonth;
     var symDate = this.fixedToSym(fixedDate, leapCycle);
-    symDate.yearWeek = this.cieling(symDate.dayOfYear / this.weekLength);
-    symDate.quarter = this.cieling((this.quarters / this.weeksInLongYear) * symDate.yearWeek);
+    symDate.yearWeek = this.ceiling(symDate.dayOfYear / this.weekLength);
+    symDate.quarter = this.ceiling((this.quarters / this.weeksInLongYear) * symDate.yearWeek);
     symDate.dayOfQuarter = symDate.dayOfYear - (this.daysInQuarter() * symDate.quarter) + this.daysInQuarter();
-    symDate.weekOfQuarter = this.cieling(symDate.dayOfQuarter / this.weekLength);
+    symDate.weekOfQuarter = this.ceiling(symDate.dayOfQuarter / this.weekLength);
     symDate.monthOfQuarter = this.symMonthOfQuarter(symDate, monthRule, maxMonth);
     symDate.monthOfYear = this.monthsInQuarter() * (symDate.quarter - 1) + symDate.monthOfQuarter;
     symDate.dayOfMonth = symDate.dayOfYear - this.symDaysBeforeMonth(symDate.monthOfYear, monthRule);
