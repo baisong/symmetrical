@@ -477,7 +477,12 @@ symmetrical.sum = function(value1, value2) {
 
 /**
  TEST DATA
- @TODO Jest
+ @TODO Add spaces after commas
+ @TODO Change rata die to integer type
+ @TODO Tests:
+ @TODO 1. fix -> sym, sym -> fix,
+ @TODO 2. fix -> greg, greg -> fix,
+ @TODO 3. G -> S -> G, S -> G -> G
  */
 symmetrical.testData = [
     {
@@ -755,8 +760,8 @@ symmetrical.formatGreg = function(dateObj, format) {
     var dayOfMonth = dateObj.getDate();
     var dayOfMonthSuffix = this.getOrdinalSuffix(dayOfMonth);
     var dayOfWeek = dateObj.getDay() + 1;
+    var monthOfYear = dateObj.getMonth() + 1;
     var year = dateObj.getFullYear();
-    var monthOfYear = dateObj.getMonth();
     var monthLong = this.months[monthOfYear].name;
     var monthShort = this.getMonthAbbr(monthOfYear);
     var dayOfWeekLong = this.weekdays[dayOfWeek];
