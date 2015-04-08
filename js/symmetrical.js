@@ -355,10 +355,15 @@ symmetrical.symDayOfYear = function (symMonth, symDay, monthRule) {
  * @returns {number}
  */
 symmetrical.symToFixed = function (symYear, symMonth, symDay, leapCycle, monthRule) {
+    var leapCycle = leapCycle || this.defaultLeapCycle;
     var monthRule = monthRule || this.defaultMonthRule;
     var newYearDay = this.symNewYearDay(symYear, leapCycle);
     var dayOfYear = this.symDayOfYear(symMonth, symDay, monthRule);
     return newYearDay + dayOfYear - 1;
+};
+
+symmetrical.symDateToFixed = function(symDate, leapCycle, monthRule) {
+    return this.symToFixed(symDate.year, symDate.monthOfYear, symDate.dayOfMonth, leapCycle, monthRule);
 };
 
 /**
@@ -872,23 +877,18 @@ symmetrical.testConvertGreg = function(dateString) {
     output.push(gregDate);
     var fixedDate = this.gregToFixed(gregDate);
     output.push(fixedDate);
-    if (this.isDateObj(source)) {
-        target = 'sym';
-        converted = this.convertDateObjectToSymDate(source, altMonthRule, altLeapCycle, altMaxMonth);
-    }
-    else if (this.isSymDate(source)) {
-        target = 'greg';
-        converted = this.convertSymDateToDateObject(source, altMonthRule, altLeapCycle);
-    }
-    if (converted === false) {
-        return -1;
-    }
-    var formatted = converted;
-    if (format != 'object') {
-        formatted = this.format(converted, target, format, distinctFormatting);
-    }
+    var symYear = this.fixedToSymYear(fixedDate);
+    output.push(symYear);
+    var symDate = this.fixedToSym(fixedDate);
+    output.push(symDate);
+    var symDateFull = this.fixedToSymFull(fixedDate);
+    output.push(symDateFull);
+    var fixedDate2 = this.symDateToFixed(symDateFull);
+    output.push(fixedDate2);
+    var gregDate2 = this.fixedToGreg(fixedDate2);
+    output.push(gregDate2);
 
-    return formatted;
+    return output;
 };
 
 module.exports = symmetrical;
