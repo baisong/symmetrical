@@ -177,8 +177,8 @@ symmetrical.weekdayAdjust = function (fixedDate) {
 };
 
 symmetrical.dateObjToGreg = function(dateObj) {
-    var gregYear = gregDate.getFullYear();
-    var dayOfYear = gregDate.getDayNum();
+    var gregYear = dateObj.getFullYear();
+    var dayOfYear = dateObj.getDayNum();
     return {
         year: gregYear,
         dayOfYear: dayOfYear
