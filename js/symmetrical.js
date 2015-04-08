@@ -120,7 +120,7 @@ symmetrical.amod = function (x, y) {
  * Monday, January 1, 1 AD. This is the same epoch as that of the ISO calendar and the Revised Julian calendar
  */
 symmetrical.symEpoch = 1;
-symmetrical.gregEpoch = 0;
+symmetrical.gregEpoch = 1;
 
 // northward equinox
 symmetrical.defaultLeapCycle = {
@@ -163,17 +163,26 @@ symmetrical.getLeapCycleMeanYear = function (leapCycle) {
  */
 
 /**
- * FixedToWeekdayNum( FixedDate ) = modulus( floor( FixedDate ) – WeekdayAdjust, 7 )
+ * FixedToWeekdayNum( FixedDate ) = modulus( floor( FixedDate ) - WeekdayAdjust, 7 )
  */
 symmetrical.fixedToWeekdayNum = function (fixedDate) {
     return this.modulus(this.floor(fixedDate) - this.weekdayAdjust(fixedDate), this.weekLength);
 };
 
 /**
- * WeekdayAdjust = modulus( SymEpoch – 1, 7 )
+ * WeekdayAdjust = modulus( SymEpoch - 1, 7 )
  */
 symmetrical.weekdayAdjust = function (fixedDate) {
     return this.modulus(this.symEpoch - fixedDate, this.weekLength);
+};
+
+symmetrical.dateObjToGreg = function(dateObj) {
+    var gregYear = gregDate.getFullYear();
+    var dayOfYear = gregDate.getDayNum();
+    return {
+        year: gregYear,
+        dayOfYear: dayOfYear
+    };
 };
 
 /**
@@ -183,10 +192,8 @@ symmetrical.weekdayAdjust = function (fixedDate) {
  * @param gregDate
  */
 symmetrical.gregToFixed = function (gregDate) {
-    var gregYear = gregDate.getFullYear();
-    var dayNum = gregDate.getDayNum();
-    var days = this.priorElapsedDays(gregYear);
-    return days + dayNum;
+    var days = this.priorElapsedDays(gregDate.year);
+    return days + gregDate.dayOfYear;
 };
 
 /**
@@ -229,7 +236,7 @@ symmetrical.fixedToGregPositive = function (fixedDate) {
         gregYear++;
         yearLength = this.gregYearLength(gregYear);
     }
-
+    console.log('F2G+: Hello');
     return {
         year: gregYear,
         dayOfYear: dayOfYear
@@ -299,7 +306,7 @@ symmetrical.gregToSym = function (gregDate, leapCycle, monthRule, maxMonth) {
  */
 symmetrical.isSymLeapYear = function (symYear, leapCycle) {
     var leapCycle = leapCycle || this.defaultLeapCycle;
-    var accumulator = this.modulus(L * symYear + this.getLeapCoefficient(leapCycle), leapCycle.years);
+    var accumulator = this.modulus(leapCycle.leaps * symYear + this.getLeapCoefficient(leapCycle), leapCycle.years);
     return accumulator < leapCycle.leaps;
 };
 
@@ -417,7 +424,7 @@ symmetrical.symMonthOfQuarter = function (symDate, monthRule, maxMonth) {
     return monthOfQuarter;
 };
 
-symmetrical.daysInMonth = function(symDate, monthRule) {
+symmetrical.symDaysInMonth = function(symDate, monthRule) {
     var monthRule = monthRule || this.defaultMonthRule;
     if (symDate.monthOfQuarter == 2) {
         return monthRule.long;
@@ -469,26 +476,26 @@ symmetrical.sum = function(value1, value2) {
  */
 symmetrical.testData = [
     {
-        "gregorianDate": "Apr 26, –121",
-        "rataDie": "–44,444",
+        "gregorianDate": "Apr 26, -121",
+        "rataDie": "-44,444",
         "fixedDay2001": -774929,
         "julianDay": 1676980,
         "weekDay": "Sat",
-        "defSym454": "Apr 27, –121",
-        "defSym010": "Apr 27, –121",
-        "altSym454": "Apr 27, –121",
-        "altSym010": "Apr 27, –121"
+        "defSym454": "Apr 27, -121",
+        "defSym010": "Apr 27, -121",
+        "altSym454": "Apr 27, -121",
+        "altSym010": "Apr 27, -121"
     },
     {
-        "gregorianDate": "Sep 27,–91",
-        "rataDie": "–33,333",
+        "gregorianDate": "Sep 27,-91",
+        "rataDie": "-33,333",
         "fixedDay2001": -763818,
         "julianDay": 1688091,
         "weekDay": "Mon",
-        "defSym454": "Sep 22, –91",
-        "defSym010": "Sep 24, –91",
-        "altSym454": "Sep 22, –91",
-        "altSym010": "Sep 24, –91"
+        "defSym454": "Sep 22, -91",
+        "defSym010": "Sep 24, -91",
+        "altSym454": "Sep 22, -91",
+        "altSym010": "Sep 24, -91"
     },
     {
         "gregorianDate": "Sep 7,122",
@@ -650,7 +657,8 @@ symmetrical.convertDateObjectToSymDate = function(dateObj, altMonthRule, altLeap
     if (altMaxMonth) {
         maxMonth = this.alternateMaxMonth;
     }
-    return this.gregToSym(dateObj, leapCycle, monthRule, maxMonth);
+    var gregDate = this.dateObjToGreg(dateObj);
+    return this.gregToSym(gregDate, leapCycle, monthRule, maxMonth);
 };
 
 symmetrical.convertSymDateToDateObject = function(symDate, altMonthRule, altLeapCycle) {
@@ -829,6 +837,41 @@ symmetrical.convert = function(source, format, distinctFormatting, altMonthRule,
     var altMaxMonth = altMaxMonth || false;
     var converted = false;
     var target = false;
+    if (this.isDateObj(source)) {
+        target = 'sym';
+        converted = this.convertDateObjectToSymDate(source, altMonthRule, altLeapCycle, altMaxMonth);
+    }
+    else if (this.isSymDate(source)) {
+        target = 'greg';
+        converted = this.convertSymDateToDateObject(source, altMonthRule, altLeapCycle);
+    }
+    if (converted === false) {
+        return -1;
+    }
+    var formatted = converted;
+    if (format != 'object') {
+        formatted = this.format(converted, target, format, distinctFormatting);
+    }
+
+    return formatted;
+};
+
+symmetrical.testConvertGreg = function(dateString) {
+    var format = format || 'short';
+    var distinctFormatting = distinctFormatting || true;
+    var altMonthRule = altMonthRule || false;
+    var altLeapCycle = altLeapCycle || false;
+    var altMaxMonth = altMaxMonth || false;
+    var converted = false;
+    var target = false;
+    var output = [];
+    output.push(dateString);
+    var dateObj = new Date(dateString);
+    output.push(dateObj.toISOString());
+    var gregDate = this.dateObjToGreg(dateObj);
+    output.push(gregDate);
+    var fixedDate = this.gregToFixed(gregDate);
+    output.push(fixedDate);
     if (this.isDateObj(source)) {
         target = 'sym';
         converted = this.convertDateObjectToSymDate(source, altMonthRule, altLeapCycle, altMaxMonth);
