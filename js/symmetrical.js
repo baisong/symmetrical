@@ -417,6 +417,14 @@ symmetrical.symMonthOfQuarter = function (symDate, monthRule, maxMonth) {
     return monthOfQuarter;
 };
 
+symmetrical.daysInMonth = function(symDate, monthRule) {
+    var monthRule = monthRule || this.defaultMonthRule;
+    if (symDate.monthOfQuarter == 2) {
+        return monthRule.long;
+    }
+    return monthRule.short;
+};
+
 symmetrical.fixedToSymFull = function (fixedDate, leapCycle, monthRule, maxMonth) {
     var leapCycle = leapCycle || this.defaultLeapCycle;
     var monthRule = monthRule || this.defaultMonthRule;
@@ -427,6 +435,7 @@ symmetrical.fixedToSymFull = function (fixedDate, leapCycle, monthRule, maxMonth
     symDate.dayOfQuarter = symDate.dayOfYear - (this.daysInQuarter() * symDate.quarter) + this.daysInQuarter();
     symDate.weekOfQuarter = this.ceiling(symDate.dayOfQuarter / this.weekLength);
     symDate.monthOfQuarter = this.symMonthOfQuarter(symDate, monthRule, maxMonth);
+    symDate.daysInMonth = this.symDaysInMonth(symDate, monthRule);
     symDate.monthOfYear = this.monthsInQuarter() * (symDate.quarter - 1) + symDate.monthOfQuarter;
     symDate.monthShort = this.getMonthAbbr(symDate.monthOfYear);
     symDate.monthLong = this.months[symDate.monthOfYear].name;
@@ -442,15 +451,11 @@ symmetrical.fixedToSymFull = function (fixedDate, leapCycle, monthRule, maxMonth
     symDate.standard = this.formatSym(symDate, 'standard');
     symDate.medium = this.formatSym(symDate, 'medium');
     symDate.long = this.formatSym(symDate, 'long');
+    symDate.isLeap = this.isSymLeapYear(symDate.year, leapCycle);
+    symDate.daysInYear = (symDate.isLeap) ? this.yearLong() : this.yearShort();
     // @TODO ?
     // leapCycle
     // yearOfLeapCycle
-    // daysInYear
-    // weeksInYear
-    // isLeap
-    // daysInMonth
-    // weeksInMonth
-    // weekOfMonth
     return symDate;
 };
 
