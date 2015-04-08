@@ -212,7 +212,7 @@ symmetrical.priorElapsedDays = function (gregYear) {
     days += this.floor(priorYear / 4);
     days -= this.floor(priorYear / 100);
     days += this.floor(priorYear / 400);
-    days -= 1;
+    //days -= 1;
     return days;
 };
 
