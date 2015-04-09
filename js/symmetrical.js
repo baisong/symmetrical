@@ -77,10 +77,10 @@ symmetrical.monthAbbrToNumber = function(abbr) {
     for (var i = 1; i <= this.alternateMaxMonth; i++) {
         monthName = this.months[i].name.toLowerCase();
         if (monthName.indexOf(abbr) == 0) {
-            return this.months[i].name;
+            return i;
         }
     }
-    return '';
+    return 0;
 };
 symmetrical.getOrdinalSuffix = function(number) {
     if (number > 3 && number < 21) return 'th';
