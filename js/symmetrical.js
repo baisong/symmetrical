@@ -250,7 +250,6 @@ symmetrical.fixedToGregPositive = function (fixedDate) {
         gregYear++;
         yearLength = this.gregYearLength(gregYear);
     }
-    console.log('F2G+: Hello');
     return {
         year: gregYear,
         dayOfYear: dayOfYear
@@ -261,7 +260,7 @@ symmetrical.fixedToGregNegative = function (fixedDate) {
     var gregYear = this.gregEpoch;
     var yearLength = this.gregYearLength(gregYear);
     var dayOfYear = fixedDate;
-    while (dayOfYear < (this.gregEpoch - yearLength)) {
+    while (dayOfYear < yearLength) {
         dayOfYear += yearLength;
         gregYear--;
         yearLength = this.gregYearLength(gregYear);
@@ -839,14 +838,14 @@ symmetrical.formatGreg = function(dateObj, format) {
 /**
  * Formats
  */
-symmetrical.format = function(date, target, format, distinctFormatting) {
+symmetrical.formatDate = function(date, target, format, distinctFormatting) {
     var format = format || 'short';
     if (format != 'micro' && format != 'short' && format != 'standard' && format != 'medium' && format != 'long') {
         return 'Unknown format';
     }
     var formatted = 'Unknown target';
     if (target == 'sym') {
-        var distinctFormatting = distinctFormatting || true;
+        var distinctFormatting = (distinctFormatting === false) ? false : true;
         if (distinctFormatting) {
             formatted = this.formatSym(date, format);
         }
@@ -908,7 +907,7 @@ symmetrical.convert = function(source, format, distinctFormatting, altMonthRule,
     }
     var formatted = converted;
     if (format != 'object') {
-        formatted = this.format(converted, target, format, distinctFormatting);
+        formatted = this.formatDate(converted, target, format, distinctFormatting);
     }
 
     return formatted;
