@@ -268,7 +268,7 @@ symmetrical.fixedToGregNegative = function (fixedDate) {
 
     return {
         year: gregYear,
-        dayOfYear: yearLength + dayOfYear
+        dayOfYear: dayOfYear
     };
 };
 
