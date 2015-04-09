@@ -66,7 +66,21 @@ symmetrical.getWeekdayAbbr = function(weekdayNum) {
     return this.weekdays[weekdayNum].name.substring(0, 3);
 };
 symmetrical.getMonthAbbr = function(monthNum) {
+    if (typeof this.months[monthNum] == 'undefined') {
+        return "monthNum " + monthNum + " undefined Month";
+    }
     return this.months[monthNum].name.substring(0, 3);
+};
+symmetrical.monthAbbrToNumber = function(abbr) {
+    abbr = abbr.toLowerCase();
+    var monthName = '';
+    for (var i = 1; i <= this.alternateMaxMonth; i++) {
+        monthName = this.months[i].name.toLowerCase();
+        if (monthName.indexOf(abbr) == 0) {
+            return this.months[i].name;
+        }
+    }
+    return '';
 };
 symmetrical.getOrdinalSuffix = function(number) {
     if (number > 3 && number < 21) return 'th';
@@ -437,11 +451,7 @@ symmetrical.symDaysInMonth = function(symDate, monthRule) {
     return monthRule.short;
 };
 
-symmetrical.fixedToSymFull = function (fixedDate, leapCycle, monthRule, maxMonth) {
-    var leapCycle = leapCycle || this.defaultLeapCycle;
-    var monthRule = monthRule || this.defaultMonthRule;
-    var maxMonth = maxMonth || this.defaultMaxMonth;
-    var symDate = this.fixedToSym(fixedDate, leapCycle);
+symmetrical.symToSymFull = function(symDate, leapCycle, monthRule, maxMonth) {
     symDate.yearWeek = this.ceiling(symDate.dayOfYear / this.weekLength);
     symDate.quarter = this.ceiling((this.quarters / this.weeksInLongYear) * symDate.yearWeek);
     symDate.dayOfQuarter = symDate.dayOfYear - (this.daysInQuarter() * symDate.quarter) + this.daysInQuarter();
@@ -471,8 +481,39 @@ symmetrical.fixedToSymFull = function (fixedDate, leapCycle, monthRule, maxMonth
     return symDate;
 };
 
+symmetrical.fixedToSymFull = function (fixedDate, leapCycle, monthRule, maxMonth) {
+    var leapCycle = leapCycle || this.defaultLeapCycle;
+    var monthRule = monthRule || this.defaultMonthRule;
+    var maxMonth = maxMonth || this.defaultMaxMonth;
+    var symDate = this.fixedToSym(fixedDate, leapCycle);
+    var symDate = this.symToSymFull(symDate, leapCycle, monthRule, maxMonth);
+    return symDate;
+};
+
 symmetrical.sum = function(value1, value2) {
     return value1 + value2;
+};
+
+/**
+ * Takes a string like "Apr 27, -121" and returns the symmetry454 symDate object with year, monthOfYear, dayOfMonth.
+ * @param dateString
+ */
+symmetrical.parseSymDate = function(dateString) {
+    dateString = dateString.replace(',', '');
+    var parts = dateString.split(' ');
+    var symDate = {};
+    symDate.year = parseInt(parts[2]);
+    symDate.monthOfYear = this.monthAbbrToNumber(parts[0]);
+    symDate.dayOfMonth = parseInt(parts[1]);
+    return symDate;
+};
+
+symmetrical.parseSymDateFull = function(dateString, leapCycle, monthRule, maxMonth) {
+    var leapCycle = leapCycle || this.defaultLeapCycle;
+    var monthRule = monthRule || this.defaultMonthRule;
+    var maxMonth = maxMonth || this.defaultMaxMonth;
+    var symDate = this.parseSymDate(dateString);
+    return this.symToSymFull(symDate, leapCycle, monthRule, maxMonth);
 };
 
 /**
@@ -480,14 +521,14 @@ symmetrical.sum = function(value1, value2) {
  @TODO Add spaces after commas
  @TODO Change rata die to integer type
  @TODO Tests:
- @TODO 1. fix -> sym, sym -> fix,
- @TODO 2. fix -> greg, greg -> fix,
- @TODO 3. G -> S -> G, S -> G -> G
+ @TODO 060 symToFixed fix -> sym, sym -> fix,
+ @TODO 070 gregoToFixed fix -> greg, greg -> fix,
+ @TODO 080 gregToSym G -> S -> G, S -> G -> G
  */
 symmetrical.testData = [
     {
         "gregorianDate": "Apr 26, -121",
-        "rataDie": "-44,444",
+        "rataDie": -44444,
         "fixedDay2001": -774929,
         "julianDay": 1676980,
         "weekDay": "Sat",
@@ -497,8 +538,8 @@ symmetrical.testData = [
         "altSym010": "Apr 27, -121"
     },
     {
-        "gregorianDate": "Sep 27,-91",
-        "rataDie": "-33,333",
+        "gregorianDate": "Sep 27, -91",
+        "rataDie": -33333,
         "fixedDay2001": -763818,
         "julianDay": 1688091,
         "weekDay": "Mon",
@@ -508,8 +549,8 @@ symmetrical.testData = [
         "altSym010": "Sep 24, -91"
     },
     {
-        "gregorianDate": "Sep 7,122",
-        "rataDie": "44444",
+        "gregorianDate": "Sep 7, 122",
+        "rataDie": 44444,
         "fixedDay2001": -686041,
         "julianDay": 1765868,
         "weekDay": "Mon",
@@ -519,8 +560,8 @@ symmetrical.testData = [
         "altSym010": "Sep 10, 122"
     },
     {
-        "gregorianDate": "Jul 4,1776",
-        "rataDie": "648491",
+        "gregorianDate": "Jul 4, 1776",
+        "rataDie": 648491,
         "fixedDay2001": -81994,
         "julianDay": 2369915,
         "weekDay": "Thu",
@@ -530,8 +571,8 @@ symmetrical.testData = [
         "altSym010": "Jul 4, 1776"
     },
     {
-        "gregorianDate": "Jul 1,1867",
-        "rataDie": "681724",
+        "gregorianDate": "Jul 1, 1867",
+        "rataDie": 681724,
         "fixedDay2001": -48761,
         "julianDay": 2403148,
         "weekDay": "Mon",
@@ -541,8 +582,8 @@ symmetrical.testData = [
         "altSym010": "Jul 1, 1867"
     },
     {
-        "gregorianDate": "Oct 24,1947",
-        "rataDie": "711058",
+        "gregorianDate": "Oct 24, 1947",
+        "rataDie": 711058,
         "fixedDay2001": -19427,
         "julianDay": 2432482,
         "weekDay": "Fri",
@@ -553,7 +594,7 @@ symmetrical.testData = [
     },
     {
         "gregorianDate": "Aug 10, 1995",
-        "rataDie": "728515",
+        "rataDie": 728515,
         "fixedDay2001": -1970,
         "julianDay": 2449939,
         "weekDay": "Thu",
@@ -564,7 +605,7 @@ symmetrical.testData = [
     },
     {
         "gregorianDate": "Feb 29, 2000",
-        "rataDie": "730179",
+        "rataDie": 730179,
         "fixedDay2001": -306,
         "julianDay": 2451603,
         "weekDay": "Tue",
@@ -575,7 +616,7 @@ symmetrical.testData = [
     },
     {
         "gregorianDate": "May 2, 2004",
-        "rataDie": "731703",
+        "rataDie": 731703,
         "fixedDay2001": 1218,
         "julianDay": 2453127,
         "weekDay": "Sun",
@@ -586,7 +627,7 @@ symmetrical.testData = [
     },
     {
         "gregorianDate": "Dec 31, 2004",
-        "rataDie": "731946",
+        "rataDie": 731946,
         "fixedDay2001": 1461,
         "julianDay": 2453370,
         "weekDay": "Fri",
@@ -597,7 +638,7 @@ symmetrical.testData = [
     },
     {
         "gregorianDate": "Feb 20, 2020",
-        "rataDie": "737475",
+        "rataDie": 737475,
         "fixedDay2001": 6990,
         "julianDay": 2458899,
         "weekDay": "Thu",
@@ -608,7 +649,7 @@ symmetrical.testData = [
     },
     {
         "gregorianDate": "Feb 2, 2222",
-        "rataDie": "811236",
+        "rataDie": 811236,
         "fixedDay2001": 80751,
         "julianDay": 2532660,
         "weekDay": "Sat",
@@ -619,7 +660,7 @@ symmetrical.testData = [
     },
     {
         "gregorianDate": "Mar 1, 3333",
-        "rataDie": "1217048",
+        "rataDie": 1217048,
         "fixedDay2001": 486563,
         "julianDay": 2938472,
         "weekDay": "Sun",
@@ -896,4 +937,34 @@ symmetrical.testConvertGreg = function(dateString) {
     return output;
 };
 
+
+symmetrical.testConvertSym = function(dateString) {
+    var format = format || 'short';
+    var distinctFormatting = distinctFormatting || true;
+    var altMonthRule = altMonthRule || false;
+    var altLeapCycle = altLeapCycle || false;
+    var altMaxMonth = altMaxMonth || false;
+    var converted = false;
+    var target = false;
+    var output = [];
+    output.push(dateString);
+    var symDate = this.parseSymDate(dateString);
+    output.push(symDate);
+    var symDateFull = this.symToSymFull(symDate);
+    output.push(symDateFull);
+    var fixedDate = this.symToFixed(symDateFull);
+    output.push(fixedDate);
+    var gregDate = this.fixedToGreg(fixedDate);
+    output.push(gregDate);
+    var fixedDate = this.gregToFixed(gregDate);
+    output.push(fixedDate);
+    var symYear = this.fixedToSymYear(fixedDate);
+    output.push(symYear);
+    var symDate = this.fixedToSym(fixedDate);
+    output.push(symDate);
+
+    return output;
+};
+
+var module = {};
 module.exports = symmetrical;
