@@ -260,7 +260,7 @@ symmetrical.fixedToGregNegative = function (fixedDate) {
     var gregYear = this.gregEpoch;
     var yearLength = this.gregYearLength(gregYear);
     var dayOfYear = fixedDate;
-    while (dayOfYear < yearLength) {
+    while (dayOfYear < 0) {
         dayOfYear += yearLength;
         gregYear--;
         yearLength = this.gregYearLength(gregYear);
