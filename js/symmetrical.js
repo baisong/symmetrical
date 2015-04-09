@@ -505,6 +505,7 @@ symmetrical.parseSymDate = function(dateString) {
     symDate.year = parseInt(parts[2]);
     symDate.monthOfYear = this.monthAbbrToNumber(parts[0]);
     symDate.dayOfMonth = parseInt(parts[1]);
+    symDate.dayOfYear = this.symDayOfYear(symDate.monthOfYear, symDate.dayOfMonth);
     return symDate;
 };
 
