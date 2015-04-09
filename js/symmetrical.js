@@ -968,8 +968,8 @@ symmetrical.testConvertSym = function(dateString) {
     output.push(fixedDate);
     var symYear = this.fixedToSymYear(fixedDate);
     output.push(symYear);
-    var symDate = this.fixedToSym(fixedDate);
-    output.push(symDate);
+    var symDate2 = this.fixedToSymFull(fixedDate);
+    output.push(symDate2);
 
     return output;
 };
