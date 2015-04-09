@@ -966,5 +966,4 @@ symmetrical.testConvertSym = function(dateString) {
     return output;
 };
 
-var module = {};
 module.exports = symmetrical;

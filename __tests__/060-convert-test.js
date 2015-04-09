@@ -25,7 +25,8 @@ for (var i = 0; i < total; i++) {
         it('convert from gregorian back to gregorian', function() {
             var row = rows.shift();
             var symDateOrig = row.defSym454;
-            var gregDate = symmetrical.convert(symmetrical.parseSymDateFull(symDateOrig), 'object');
+            var symDateFull = symmetrical.parseSymDateFull(symDateOrig);
+            var gregDate = symmetrical.convert(symDateFull, 'object');
             var symDateNew = symmetrical.convert(gregDate, 'standard', false);
             expect(symDateNew).toBe(symDateOrig);
         });
