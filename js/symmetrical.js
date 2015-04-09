@@ -377,6 +377,12 @@ symmetrical.symToFixed = function (symYear, symMonth, symDay, leapCycle, monthRu
 };
 
 symmetrical.symDateToFixed = function(symDate, leapCycle, monthRule) {
+    var leapCycle = leapCycle || this.defaultLeapCycle;
+    var monthRule = monthRule || this.defaultMonthRule;
+    return this.symToFixed(symDate.year, symDate.monthOfYear, symDate.dayOfMonth, leapCycle, monthRule);
+};
+
+symmetrical.symDateToFixed = function(symDate, leapCycle, monthRule) {
     return this.symToFixed(symDate.year, symDate.monthOfYear, symDate.dayOfMonth, leapCycle, monthRule);
 };
 
@@ -883,7 +889,7 @@ symmetrical.convert = function(source, format, distinctFormatting, altMonthRule,
     }
     
     var format = format || 'short';
-    var distinctFormatting = distinctFormatting || true;
+    var distinctFormatting = (distinctFormatting === false) ? distinctFormatting : true;
     var altMonthRule = altMonthRule || false;
     var altLeapCycle = altLeapCycle || false;
     var altMaxMonth = altMaxMonth || false;
@@ -953,7 +959,7 @@ symmetrical.testConvertSym = function(dateString) {
     output.push(symDate);
     var symDateFull = this.symToSymFull(symDate);
     output.push(symDateFull);
-    var fixedDate = this.symToFixed(symDateFull);
+    var fixedDate = this.symDateToFixed(symDateFull);
     output.push(fixedDate);
     var gregDate = this.fixedToGreg(fixedDate);
     output.push(gregDate);
