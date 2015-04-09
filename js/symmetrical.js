@@ -742,7 +742,7 @@ symmetrical.convertSymDateToDateObject = function(symDate, altMonthRule, altLeap
  * Long     Sunday, December 35th 1999
  */
 symmetrical.formatSymAmbiguous = function(symDate, format) {
-    formatted = false;
+    var formatted = false;
     switch (format) {
         case 'micro':
             formatted = [symDate.monthOfYear, symDate.dayOfMonth].join('/');
@@ -773,7 +773,7 @@ symmetrical.formatSymAmbiguous = function(symDate, format) {
  * Long     5th Sunday of December 1999
  */
 symmetrical.formatSym = function(symDate, format) {
-    formatted = false;
+    var formatted = false;
     switch (format) {
         case 'micro':
             formatted = [symDate.year, symDate.monthOfYear, symDate.weekOfMonth, symDate.dayOfWeek].join('/');
@@ -804,7 +804,7 @@ symmetrical.formatSym = function(symDate, format) {
  * Long     Sunday, December 31st 1999
  */
 symmetrical.formatGreg = function(dateObj, format) {
-    formatted = false;
+    var formatted = false;
     var dayOfMonth = dateObj.getDate();
     var dayOfMonthSuffix = this.getOrdinalSuffix(dayOfMonth);
     var dayOfWeek = dateObj.getDay() + 1;
