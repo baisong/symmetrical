@@ -688,7 +688,7 @@ symmetrical.cleanSource = function(source) {
         return source;
     }
     if (this.isSymDate(source)) {
-        return source;
+        return this.symToSymFull(source);
     }
     return false;
 };
