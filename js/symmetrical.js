@@ -961,8 +961,9 @@ symmetrical.testConvertSym = function(dateString) {
     output.push(symDateFull);
     var fixedDate = this.symDateToFixed(symDateFull);
     output.push(fixedDate);
-    var gregDate = this.fixedToGreg(fixedDate);
-    output.push(gregDate);
+    var dateObj = this.fixedToGreg(fixedDate);
+    output.push(dateObj);
+    var gregDate = this.dateObjToGreg(dateObj);
     var fixedDate = this.gregToFixed(gregDate);
     output.push(fixedDate);
     var symYear = this.fixedToSymYear(fixedDate);
