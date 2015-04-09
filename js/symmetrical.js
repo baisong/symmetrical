@@ -970,7 +970,8 @@ symmetrical.testConvertSym = function(dateString) {
     output.push(symYear);
     var symDate2 = this.fixedToSymFull(fixedDate);
     output.push(symDate2);
-
+    var symDateNew = this.convert(gregDate, 'standard', false);
+    output.push(symDateNew);
     return output;
 };
 
