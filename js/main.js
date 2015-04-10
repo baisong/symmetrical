@@ -58,6 +58,7 @@ $(document).ready(function () {
     $gregInput.blur(convert);
     var $calendar = $('#calendar');
     $calendar.append('<h1 class="yearname">' + demo.year + '</h1>');
+    var today = symmetrical.convert(new Date(), 'datepicker');
     for (var i = 0; i < 4; i++) {
         id = 'q' + (i + 1);
         var classattr = 'quarter'
@@ -84,14 +85,24 @@ $(document).ready(function () {
                         var mdaynum = k * 7 + l;
                         id = 'd' + (daynum + 1);
                         classattr = 'day qd' + (qdaynum + 1) + ' md' + (mdaynum + 1) + ' wd' + (l + 1);
-                        $week.append('<div id="' + id + '" data-day="' + (daynum + 1) + '" data-gregorian="" class="' + classattr + '">');
+                        var dayOfYear = daynum + 1;
+                        var sym = '';
+                        var greg = '';
+                        if (dayOfYear > 0) {
+                            var symDate = symmetrical.symToSymFull({year: demo.year, dayOfYear: dayOfYear});
+                            var greg = symmetrical.convert(symDate, 'datepicker');
+                            var sym = SymDate.short;
+                            if (greg == today) {
+                                classattr += ' date-selected';
+                                $gregInput.val(today);
+                            }
+                        }
+                        $week.append('<div id="' + id + '" data-day="' + dayOfYear + '" data-greg="' + greg + '" data-sym="' + sym + '" class="' + classattr + '">');
                     }
                 }
             }
         }
     }
-    // Use today's date as first value.
-    $gregInput.text(symmetrical.convert(new Date(), 'short'));
     $('.day').click(function (e) {
         e.preventDefault();
         var $this = $(this);
