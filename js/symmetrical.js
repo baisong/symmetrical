@@ -325,7 +325,6 @@ symmetrical.isSymLeapYear = function (symYear, leapCycle) {
 
 /**
  * Returns the fixed date of Jan 1 of the given symmetrical year.
- * @FIXME both leap cycles wrong
  */
 symmetrical.symNewYearDay = function (symYear, leapCycle) {
     var leapCycle = leapCycle || this.defaultLeapCycle;
@@ -781,7 +780,7 @@ symmetrical.formatSym = function(symDate, format) {
             formatted = [symDate.year, symDate.monthOfYear, symDate.weekOfMonth, symDate.dayOfWeekShort].join('/');
             break;
         case 'standard':
-            formatted = [symDate.weekOfMonth + '/' + symDate.dayOfWeekShort + ',', symDate.monthShort, symDate.year].join(' ');
+            formatted = [symDate.weekOfMonth + symDate.weekOfMonthSuffix, symDate.dayOfWeekShort + ',', symDate.monthShort, symDate.year].join(' ');
             break;
         case 'medium':
             formatted = [symDate.weekOfMonth + symDate.weekOfMonthSuffix, symDate.dayOfWeekLong + ',', symDate.monthShort, symDate.year].join(' ');
