@@ -6,6 +6,7 @@ var $greg = $('#s454-gregorian');
 var $s454 = $('#s454-symmetry454');
 $(document).ready(function () {
     var $gregInput = $('#s454-gregorian');
+    var $symInput = $('#s454-symmetry454');
     var convert = function (e) {
         var dateText = $greg.val();
         if (dateText != demo.last_converted) {
@@ -38,7 +39,7 @@ $(document).ready(function () {
                         var thisSymDate = symmetrical.symToSymFull({year: sd.year, dayOfYear: day});
                         var thisGregDate = symmetrical.convert(thisSymDate, 'datepicker');
                         //var thisGregDateObj = symmetrical.convert(thisSymDate, 'object');
-                        var sym = thisSymDate.short;
+                        var sym = thisSymDate.standard;
                         $this.data('sym', sym);
                         $this.data('greg', thisGregDate);
                     }
@@ -91,7 +92,7 @@ $(document).ready(function () {
                         if (dayOfYear > 0) {
                             var symDate = symmetrical.symToSymFull({year: demo.year, dayOfYear: dayOfYear});
                             var greg = symmetrical.convert(symDate, 'datepicker');
-                            var sym = symDate.short;
+                            var sym = symDate.standard;
                             if (greg == today) {
                                 classattr += ' date-selected';
                                 $gregInput.val(today);
@@ -109,6 +110,11 @@ $(document).ready(function () {
         var gregDate = $this.data('greg');
         var symDate = $this.data('sym');
         $gregInput.val(gregDate);
+        $symInput.val(symDate);
+        if (!$this.hasClass('date-selected')) {
+            $('.date-selected').removeClass('date-selected');
+            $this.addClass('date-selected');
+        }
         //$gregInput.trigger('change');
     });
     function timeout() {
