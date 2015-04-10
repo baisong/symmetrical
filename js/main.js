@@ -94,8 +94,11 @@ $(document).ready(function () {
     $gregInput.text(symmetrical.convert(new Date(), 'short'));
     $('.day').click(function (e) {
         e.preventDefault();
-        var dayNum = parseInt($(this).attr('id').substring(1));
-        var year = parseInt($('.yearname').text());
+        var $this = $(this);
+        var gregDate = $this.data('greg');
+        var symDate = $this.data('sym');
+        $gregInput.val(gregDate);
+        //$gregInput.trigger('change');
     });
     function timeout() {
         setTimeout(function () {
