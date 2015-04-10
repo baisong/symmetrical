@@ -5,6 +5,7 @@ demo.monthNames = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep'
 var $greg = $('#s454-gregorian');
 var $s454 = $('#s454-symmetry454');
 $(document).ready(function () {
+    var $gregInput = $('#s454-gregorian');
     var convert = function (e) {
         var dateText = $greg.val();
         if (dateText != demo.last_converted) {
@@ -44,16 +45,16 @@ $(document).ready(function () {
             }
         }
     };
-    $('#s454-gregorian').datepicker({
+    $gregInput.datepicker({
         onSelect: function (d, i) {
             if (d !== i.lastVal) {
                 $(this).change();
             }
         }
     });
-    $('#s454-gregorian').change(convert);
-    $('#s454-gregorian').keydown(convert);
-    $('#s454-gregorian').blur(convert);
+    $gregInput.change(convert);
+    $gregInput.keydown(convert);
+    $gregInput.blur(convert);
     var $calendar = $('#calendar');
     $calendar.append('<h1 class="yearname">' + demo.year + '</h1>');
     for (var i = 0; i < 4; i++) {
@@ -88,6 +89,8 @@ $(document).ready(function () {
             }
         }
     }
+    // Use today's date as first value.
+    $gregInput.text(symmetrical.convert(new Date(), 'short'));
     $('.day').click(function (e) {
         e.preventDefault();
         var dayNum = parseInt($(this).attr('id').substring(1));
