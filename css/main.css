@@ -20,6 +20,8 @@ body {
 border: 1px solid #fdfdfd;
 padding: 20px;
 margin: 4px;
+
+  margin-left: 81px;
 }
 
 .s454-converter {
@@ -39,9 +41,9 @@ margin: 4px;
 
 #calendar {
   clear: both;
-  margin: 0 auto;
   width: 700px;
   margin-bottom: 40px;
+  margin: 10px auto;
 }
 
 .quarter, .month, .week, .day {
@@ -86,4 +88,7 @@ margin: 4px;
 }
 .date-selected {
   background: #009afd;
+}
+.yearname {
+  display: none;
 }
