@@ -36,7 +36,7 @@ $(document).ready(function () {
                     if (day > 0) {
                         var greg = symmetrical.convert(sd);
                         var date = symmetrical.convert(sd, 'object');
-                        var sym = symmetrical.getGregorian(date);
+                        var sym = symmetrical.convert(date, 'short');
                         $this.data('sym', sym);
                         $this.data('greg', greg);
                     }
