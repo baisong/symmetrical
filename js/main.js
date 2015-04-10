@@ -91,7 +91,7 @@ $(document).ready(function () {
                         if (dayOfYear > 0) {
                             var symDate = symmetrical.symToSymFull({year: demo.year, dayOfYear: dayOfYear});
                             var greg = symmetrical.convert(symDate, 'datepicker');
-                            var sym = SymDate.short;
+                            var sym = symDate.short;
                             if (greg == today) {
                                 classattr += ' date-selected';
                                 $gregInput.val(today);
