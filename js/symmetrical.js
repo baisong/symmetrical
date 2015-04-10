@@ -813,12 +813,17 @@ symmetrical.formatGreg = function(dateObj, format) {
     var monthShort = this.getMonthAbbr(monthOfYear);
     var dayOfWeekLong = this.weekdays[dayOfWeek];
     var dayOfWeekShort = this.getWeekdayAbbr(dayOfWeek);
+    var dpMonthPrefix = (monthOfYear < 10) ? '0' : '';
+    var dpDayPrefix = (dayOfMonth < 10) ? '0' : '';
     switch (format) {
         case 'micro':
             formatted = [monthOfYear, dayOfMonth].join('/');
             break;
         case 'short':
             formatted = [monthOfYear, dayOfMonth, year].join('/');
+            break;
+        case 'datepicker':
+            formatted = ['' + dpMonthPrefix + monthOfYear, '' + dpDayPrefix + dayOfMonth, year].join('/');
             break;
         case 'standard':
             formatted = [monthShort, dayOfMonth + ',', year].join(' ');
@@ -840,7 +845,7 @@ symmetrical.formatGreg = function(dateObj, format) {
  */
 symmetrical.formatDate = function(date, target, format, distinctFormatting) {
     var format = format || 'short';
-    if (format != 'micro' && format != 'short' && format != 'standard' && format != 'medium' && format != 'long') {
+    if (format != 'micro' && format != 'short' && format != 'standard' && format != 'medium' && format != 'long' && format != 'datepicker') {
         return 'Unknown format';
     }
     var formatted = 'Unknown target';

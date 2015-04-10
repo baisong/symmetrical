@@ -35,11 +35,12 @@ $(document).ready(function () {
                     var $this = $(this);
                     var day = parseInt($this.data('day'));
                     if (day > 0) {
-                        var greg = symmetrical.convert(sd);
-                        var date = symmetrical.convert(sd, 'object');
-                        var sym = symmetrical.convert(date, 'short');
+                        var thisSymDate = symmetrical.symToSymFull({year: sd.year, dayOfYear: day});
+                        var thisGregDate = symmetrical.convert(thisSymDate, 'datepicker');
+                        //var thisGregDateObj = symmetrical.convert(thisSymDate, 'object');
+                        var sym = thisSymDate.short;
                         $this.data('sym', sym);
-                        $this.data('greg', greg);
+                        $this.data('greg', thisGregDate);
                     }
                 });
             }
