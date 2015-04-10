@@ -14,8 +14,8 @@ $(document).ready(function () {
                  var s454o = (new Date(dateText)).toSymmetry454(); */
                 sd = symmetrical.convert(new Date(dateText), 'object');
                 var year = sd.year;
-                var month = sd.monthOfYear;
                 var quarter = sd.quarter;
+                var month = sd.monthOfQuarter;
                 var week = sd.weekOfMonth;
                 var day = sd.dayOfWeek;
                 $('.yearname').text(year);
