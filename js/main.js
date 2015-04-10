@@ -11,7 +11,7 @@ $(document).ready(function () {
             if (/^(0?[1-9]|1[012])[\/\-](0?[1-9]|[12][0-9]|3[01])[\/\-]\d{4}$/.test(dateText)) {
                 /* var s454 = (new Date(dateText)).toSymmetry454String();
                  var s454o = (new Date(dateText)).toSymmetry454(); */
-                sd = symmetrical.comvert(new Date(dateText), 'object');
+                sd = symmetrical.convert(new Date(dateText), 'object');
                 var year = sd.year;
                 var month = sd.monthOfYear;
                 var quarter = sd.quarter;
