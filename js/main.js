@@ -106,7 +106,7 @@ $(document).ready(function () {
                             var sym = symDate.standard;
                             if (greg == today) {
                                 classattr += ' date-selected';
-                                $gregInput.val(today);
+                                $gregInput.val(todayFmt);
                             }
                         }
                         $week.append('<div id="' + id + '" data-day="' + dayOfYear + '" data-greg="' + greg + '" data-sym="' + sym + '" class="' + classattr + '">');
