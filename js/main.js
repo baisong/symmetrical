@@ -75,7 +75,7 @@ $(document).ready(function () {
             $month.append('<h2 class="monthname">' + demo.monthNames[monthnum] + '</h2>');
             for (var k = 0; k < 5; k++) {
                 var onLeapWeek = (j == 2 && k == 4);
-                if (j == 1 || k != 4 || onLeapWeek) {
+                if (j == 1 || k < 4 || onLeapWeek) {
                     var weeknum = (i * 13) + (j * 4) + (j == 2 ? 1 : 0) + k;
                     var qweeknum = (j * 4) + (j == 2 ? 1 : 0) + k;
                     var id = 'w' + (weeknum + 1);
