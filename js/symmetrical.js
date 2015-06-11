@@ -872,8 +872,8 @@ symmetrical.formatDate = function(date, target, format, distinctFormatting) {
  *   - @TODO string: "Dec 35, 1999" -- The output of symmetrical.formatSymAmbiguous(symDate, 'standard');
  *   - @TODO string: "1999/12/5/1" -- The output of symmetrical.formatSym(symDate, 'micro');
  * @param format (string)
- *   Defaults to 'object'. Use one of 'micro', 'short', 'standard', 'medium', or 'long' for formatted strings.
- *   See symmetrical.format() for format definitions.
+ *   Defaults to 'short'. Use one of 'micro', 'short', 'standard', 'medium', or 'long' for formatted strings.
+ *   Use 'object' for a full object with all date properties. See symmetrical.format() for format definitions.
  * @param distinctFormatting (bool)
  *   Defaults to true. Only affects formatted (string) output when converting from gregorian to symmetrical. Distinct
  *   formats like "1999/12/5/Sun" are unambiguously not gregorian dates. Use false for date strings like "12/35/1999".
