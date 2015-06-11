@@ -29,15 +29,16 @@ body {
   color: #555;
   font-weight: bold;
 }
+/*
 .s454-converter input {
   clear: both;
   float: left;
-}
+} 
 
 .s454-converter .s454-gregorian label, 
 .s454-converter .s454-gregorian input {
   float: right;
-}
+}*/
 
 #calendar {
   clear: both;
@@ -95,4 +96,8 @@ body {
 .input-wrap {
   width: 50%;
   margin: 0 auto;
+  padding: 5px;
+  border: 1px solid gray;
+  border-radius: 2px;
+  text-align: center !important;
 }
