@@ -34,6 +34,11 @@ body {
   float: left;
 }
 
+.s454-converter .s454-gregorian label, 
+.s454-converter .s454-gregorian input {
+  float: right;
+}
+
 #calendar {
   clear: both;
   width: 700px;
@@ -86,4 +91,8 @@ body {
 }
 .quarter-4 {
   margin-right: -40px;
+}
+.input-wrap {
+  width: 50%;
+  margin: 0 auto;
 }
