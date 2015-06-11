@@ -1,5 +1,5 @@
 body {
-  background: #f0f0f0;
+  background: white;
   font-family: Arial, helvetica, sans-serif;
 }
 
@@ -7,9 +7,6 @@ body {
   margin: 20px auto;
   padding: 10px;
   text-align: center;
-  border-radius: 10px;
-  background: white;
-  border: 1px solid #ddd;
   height: 600px;
   padding-bottom: 60px;
 }
