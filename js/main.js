@@ -60,7 +60,8 @@ $(document).ready(function () {
     $gregInput.blur(convert);
     var $calendar = $('#calendar');
     $calendar.append('<h1 class="yearname">' + demo.year + '</h1>');
-    var today = symmetrical.convert(new Date(), 'datepicker');
+    var todaySym = symmetrical.convert(today);
+    var todayFmt = symmetrical.formatGreg(today, 'datepicker');
     for (var i = 0; i < 4; i++) {
         id = 'q' + (i + 1);
         var classattr = 'quarter quarter-' + (i + 1);
@@ -84,7 +85,7 @@ $(document).ready(function () {
                     if (onLeapWeek) {
                         classattr += ' leapweek';
                         style = 'style="display: none;"';
-                        if (today.isLeap) {
+                        if (todaySym.isLeap) {
                             style = 'style="display: block;"';
                         }
                     }
