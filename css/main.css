@@ -59,13 +59,13 @@ margin: 4px;
   border-top: 1px solid gray;
   border-left: 1px solid gray;
   border-bottom: 1px solid gray;
-  margin-right: 20px;
-  margin-bottom: 20px;
+  margin-right: 21px;
+  margin-bottom: 21px;
 }
 
 .day {
-  width:20px;
-  height: 20px;
+  width: 21px;
+  height: 21px;
   border-right: 1px solid gray;
   border-bottom: 1px solid gray;
   margin: 0;
@@ -89,6 +89,7 @@ margin: 4px;
 .date-selected {
   background: #009afd;
 }
-.yearname {
-  display: none;
+.q4 {
+  margin-right: -40px;
+}
 }
