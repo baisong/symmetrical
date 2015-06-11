@@ -60,7 +60,7 @@ $(document).ready(function () {
     $gregInput.blur(convert);
     var $calendar = $('#calendar');
     $calendar.append('<h1 class="yearname">' + demo.year + '</h1>');
-    var todaySym = symmetrical.convert(today);
+    var todaySym = symmetrical.convert(today, 'object');
     var todayFmt = symmetrical.formatGreg(today, 'datepicker');
     for (var i = 0; i < 4; i++) {
         id = 'q' + (i + 1);
