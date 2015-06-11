@@ -1,5 +1,6 @@
+var today = new Date();
 var demo = {};
-demo.year = 2015;
+demo.year = today.getFullYear();
 demo.last_converted = '';
 demo.monthNames = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
 var $greg = $('#s454-gregorian');
@@ -73,12 +74,21 @@ $(document).ready(function () {
             var $month = $('#' + id);
             $month.append('<h2 class="monthname">' + demo.monthNames[monthnum] + '</h2>');
             for (var k = 0; k < 5; k++) {
-                if (j == 1 || k != 4) {
+                var onLeapWeek = (j == 2 && k == 4);
+                if (j == 1 || k != 4 || onLeapWeek) {
                     var weeknum = (i * 13) + (j * 4) + (j == 2 ? 1 : 0) + k;
                     var qweeknum = (j * 4) + (j == 2 ? 1 : 0) + k;
-                    id = 'w' + (weeknum + 1);
-                    classattr = 'week qw' + (qweeknum + 1) + ' mw' + (k + 1);
-                    $month.append('<div id="' + id + '" class="' + classattr + '">');
+                    var id = 'w' + (weeknum + 1);
+                    var classattr = 'week qw' + (qweeknum + 1) + ' mw' + (k + 1);
+                    var style = '';
+                    if (onLeapWeek) {
+                        classattr += ' leapweek';
+                        style = 'style="display: none;"';
+                        if (today.isLeap) {
+                            style = 'style="display: block;"';
+                        }
+                    }
+                    $month.append('<div id="' + id + '" class="' + classattr + '" ' + style + '>');
                     var $week = $('#' + id);
                     for (var l = 0; l < 7; l++) {
                         var daynum = (((i * 13) + (j * 4) + (j == 2 ? 1 : 0) + k) * 7) + l;
