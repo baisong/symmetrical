@@ -23,7 +23,7 @@ $(document).ready(function () {
                 if (parseInt($('.yearname').text()) !== sd.year) {
                     $('.yearname').text(year);
                     var display = 'none';
-                    if (sd.isLeap {
+                    if (sd.isLeap) {
                         display = 'block';
                     }
                     $('.leapweek').css({display: display});
