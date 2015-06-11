@@ -20,7 +20,14 @@ $(document).ready(function () {
                 var month = sd.monthOfQuarter;
                 var week = sd.weekOfMonth;
                 var day = sd.dayOfWeek;
-                $('.yearname').text(year);
+                if (parseInt($('.yearname').text()) !== sd.year) {
+                    $('.yearname').text(year);
+                    var display = 'none';
+                    if (sd.isLeap {
+                        display = 'block';
+                    }
+                    $('.leapweek').css({display: display});
+                }
                 $('.date-selected').removeClass('date-selected');
                 var sel = '.quarter:nth-of-type(' + quarter
                     + ') .month:nth-of-type(' + month
