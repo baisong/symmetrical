@@ -63,7 +63,7 @@ $(document).ready(function () {
     var today = symmetrical.convert(new Date(), 'datepicker');
     for (var i = 0; i < 4; i++) {
         id = 'q' + (i + 1);
-        var classattr = 'quarter'
+        var classattr = 'quarter quarter-' + (i + 1);
         $calendar.append('<div id="' + id + '" class="' + classattr + '">');
         var $quarter = $('#' + id);
         for (var j = 0; j < 3; j++) {
