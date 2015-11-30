@@ -452,7 +452,7 @@ symmetrical.symDaysInMonth = function(symDate, monthRule, isLeap) {
     if (symDate.monthOfQuarter == 2) {
         return monthRule.long;
     }
-    if (symDate.month ==  12 && isLeap) {
+    if (symDate.monthOfQuarter == 3 && symDate.quarter == 4 && isLeap) {
         return monthRule.short + this.weekLength;
     }
     return monthRule.short;
