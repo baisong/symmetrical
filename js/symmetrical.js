@@ -10,7 +10,7 @@ Date.prototype.getDayNum = function () {
     return Math.ceil((this - onejan) / 86400000);
 };
 
-var symmetrical = {};
+var symmetrical = symmetrical || {};
 
 symmetrical.weekdays = {
     1: {name: 'Monday'},
